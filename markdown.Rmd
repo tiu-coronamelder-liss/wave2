@@ -6954,6 +6954,118 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
+##### Verplichting tot opvolgen adviezen
+Er is onderzocht in hoeverre respondenten zich verplicht voelen om de adviezen uit meldingen van de CoronaMelder op te volgen, en of dit leidt tot irritatie. Hieruit blijkt dat `r round((nrow(filter(data, (AdherenceNotification_voluntariness1 == 'Helemaal mee eens'| AdherenceNotification_voluntariness1 == 'Mee eens'| AdherenceNotification_voluntariness1 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% zich verplicht voelt om het advies uit de melding op te volgen, `r round((nrow(filter(data, (AdherenceNotification_voluntariness2 == 'Helemaal mee eens'| AdherenceNotification_voluntariness2 == 'Mee eens'| AdherenceNotification_voluntariness2 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% vindt dat het advies uit de melding hun vrijheid bedreigt om zelf te kiezen wat zij doen, `r round((nrow(filter(data, (AdherenceNotification_AffectAnger == 'Helemaal mee eens'| AdherenceNotification_AffectAnger == 'Mee eens'| AdherenceNotification_AffectAnger == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% boos wordt van het advies gegeven in de melding, en `r round((nrow(filter(data, (AdherenceNotification_AffectIrritation == 'Helemaal mee eens'| AdherenceNotification_AffectIrritation == 'Mee eens'| AdherenceNotification_AffectIrritation == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% aangeeft dat het advies gegeven in de melding hen irriteert.
+
+```{r verplichtingadviezen, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Verplichting om adviezen op te volgen", tab.cap="Verplichting om adviezen op te volgen"}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("AdherenceNotification_voluntariness1", 
+                        "AdherenceNotification_voluntariness2", 
+                        "AdherenceNotification_AffectAnger",
+                        "AdherenceNotification_AffectIrritation")
+graph_questionlabels = c("Ik voel me verplicht om het advies uit de melding op te volgen", 
+                         "Het advies uit de melding bedreigt mijn vrijheid om zelf te kiezen wat ik doe", 
+                         "Het advies gegeven in de melding maakt me boos",
+                         "Het advies gegeven in de melding irriteert mij"); 
+
+# These questions have 7 answer categories: Helemaal mee eens - Helemaal mee oneens. The following color palette should be used:
+color_palette = my_palette7
+# Order of the question categories: first = most green, last = most red # Check if the answer categories match with the codebook (e.g, sometimes also 'weet ik niet is one of the answeroptions')
+graph_answercategories = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens", "Neutraal", "Een beetje oneens", "Oneens", "Helemaal mee oneens"); 
+
+# Create a dataframe for the plot
+#First only keep the variables you wish to keep. Note: nomem_enc is the participant id
+data_graph_wideformat = select(data, nomem_encr, all_of(graph_variablenames))
+
+#Convert it to long format
+data_graph_longformat = melt(data_graph_wideformat, id.vars = c('nomem_encr'), measure.vars = graph_variablenames)
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+data_graph_longformat$variable <- factor(data_graph_longformat$variable,levels = rev(graph_variablenames))
+
+# Also invert the order of the question labels (as default is that the first element of the vector is placed on the bottom)
+graph_questionlabels = rev(graph_questionlabels)
+
+# Set the correct ordering of the answer categories (by default on alphabetic order)
+data_graph_longformat$value <- factor(data_graph_longformat$value,levels = graph_answercategories)
+
+# Create the plot
+theplot <- ggplot(data=data_graph_longformat, aes(fill=value, x=variable)) + theme_bw() + geom_bar(aes(y = (..count..)/sum(..count..)*length(graph_variablenames))) + scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1)) + coord_flip() + labs(x = "", y = "", fill = "") + scale_fill_manual(values=color_palette, drop=FALSE, labels=stringr::str_wrap(graph_answercategories, width = 10)) + scale_x_discrete(labels=stringr::str_wrap(graph_questionlabels, width = 30)) + theme(plot.margin = margin(0, 0, 0, 0), legend.text=element_text(size=8)) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+# Create the table. Step 1: new data frame containing counts
+data_table = data.frame(matrix(0, ncol = 0, nrow = length(levels(data[[graph_variablenames[1]]]))))
+
+# We need one extra (empty) column label for the row with the possible values
+table_questionlabels = list()
+table_questionlabels["table_answercategories"] <- ""
+
+# We also need the 'unreversed' question labels ;)
+graph_questionlabels_unrev <- rev(graph_questionlabels)
+
+# Inefficient loop, but it does a lot for us: add the counts as columns to the dataframe,
+# and add the correct labels for column headings
+for(idx in 1:length(graph_variablenames)) {
+  
+  if (idx == 1) {
+    data_table["table_answercategories"] <- as.data.frame(table(data_graph_wideformat[graph_variablenames[idx]]))[1]
+  }
+  
+  # Add to new dataframe
+  data_table[graph_variablenames[idx]] <- as.data.frame(table(data_graph_wideformat[graph_variablenames[idx]]))[2]
+  
+  # Add correct mapping to column headings
+  table_questionlabels[graph_variablenames[idx]] <- graph_questionlabels_unrev[idx]
+}
+
+
+
+
+# Build the basic table
+ft <- flextable(
+  head(data_table, n = nrow(data_table))
+)
+
+# Header labels
+ft <- set_header_labels(ft, values = table_questionlabels)
+
+# Set up the footer of totals
+totals = c("Totaal")
+
+# Percentages and totals
+for(colname in colnames(data_table)) {
+  if(colname != "table_answercategories") {
+    # Add percentage to cell
+    ft <- compose(ft, j = colname, value = as_paragraph(eval(parse(text=colname)), " (", sprintf("%.1f", eval(parse(text=colname))/sum(eval(parse(text=colname)))*100), "%)"))
+    
+    # Add total to footer
+    tablecolumn = paste("data_table$", colname)
+    totals <- c(totals, paste(sum(eval(parse(text=tablecolumn))), " (100%)"))
+  }
+}
+
+# Actually add the footer with totals
+ft <- add_footer_row(ft, values = totals, colwidths = rep(1, length(totals)))
+
+# Change layout of table, and footer specifically
+ft <- fontsize(ft, size = 10, part = "all")
+ft <- font(ft, fontname = "Cambria", part = "all")
+ft <- align(ft, j = -1, align = "right", part = "footer")
+ft <- padding(ft, padding = 5, part = "footer")
+
+# Basic autofit does not work well with Word, found this code below
+# but it seems to make all columns of equal size (7 inch / number of columns?)
+# Might give unwanted results, so we might want to control this per column.
+ft_out <- ft %>% autofit()
+ft_out <- width(ft_out, j = 1, width = 1.5)
+ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_table))-1))
+
+ft_out
+```
+
 ### Intentie tot doorgeven GGD-sleutel na positieve test
 Als iemand positief is getest op het coronavirus kan men dit daarna via de app laten weten door de GGD-sleutel door te geven aan de GGD medewerker. Dan waarschuwt de app weer mensen bij wie de positief gesteste persoon in de buurt is geweest. Van de respondenten heeft `r round((nrow(filter(data, (Intention_reportinfection == 'Helemaal mee eens'| Intention_reportinfection == 'Mee eens'| Intention_reportinfection == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%  de intentie om de GGD-sleutel door te geven. 
 
