@@ -189,12 +189,12 @@ user_totals[5] <- sum(data$user_status_intention == "Nooit gebruikt en wel van p
 
 ######### Set up data preprocessing and analysis for comparison with earlier waves ####################
 ##### Load dataset of previous wave (not included on Github) and remove missing values
-data_wave1_in <- read.spss('L_CoronaMelder_wave1_3p.sav', to.data.frame=TRUE, use.missings=FALSE)
+data_wave_min1_in <- read.spss('L_CoronaMelder_wave1_3p.sav', to.data.frame=TRUE, use.missings=FALSE)
 # Filter out the respondents that did not complete the entire survey 
-data_wave1 <- data_wave1_in[!is.na(data_wave1_in$duur),]
+data_wave_min1 <- data_wave_min1_in[!is.na(data_wave_min1_in$duur),]
 
 # Combine the dataset of the current wave (wave 2) with the previous wave (wave1). Only keep participants that completed both waves. 
-data_wave1_wave2 = merge(data_wave1, data, by = "nomem_encr", all = FALSE, suffix = c("_w1", "_w2")) # all = FALSE to only include IDs present in both datasets.
+data_currentwave_wavemin1 = merge(data_wave_min1, data, by = "nomem_encr", all = FALSE, suffix = c("_cw", "_wmin1")) # all = FALSE to only include IDs present in both datasets.
 
 ```
 ```{=openxml}
