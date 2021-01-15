@@ -3597,6 +3597,9 @@ data_selected$user_status_intention = droplevels(data_selected$user_status_inten
 # Convert into a table that can be used for the chi square test
 chisq.table = table(data_selected$Beliefs_technologyperformance_agree, data_selected$user_status_intention)
 chisqtest = chisq.test(chisq.table) 
+
+
+
 ```
 
 Daarnaast liet de chi kwadraat toets (X²(`r chisqtest$parameter`) = `r round(chisqtest$statistic, digits = 2)`, p `r ifelse(chisqtest$p.value < 0.001, "<0.001", paste("=", round(chisqtest$p.value, digits = 3)))`) zien dat er `r if(chisqtest$p.value > 0.05){"g"}`een significant verschil was in het percentage gebruikers (`r round((nrow(filter(data_selected, (user_status_intention == 'Gebruiker'& Beliefs_technologyperformance_agree == 'Totaal waar'))) /nrow(filter(data_selected, (user_status_intention == 'Gebruiker'))))*100, digits = 1)`%) dat aangaf dat de CoronaMelder via bluetooth kan aangeven wie er in de buurt is geweest van een persoon die besmet is, vergeleken met degenen die de app nooit hebben gebruikt, vergeleken met degenen die de app nooit hebben gebruikt en daarnaast aangaven neutraal te zijn in hun intentie om de CoronaMelder te gaan gebruiken (`r round((nrow(filter(data_selected, (user_status_intention == 'Nooit gebruikt en neutraal' & Beliefs_technologyperformance_agree == 'Totaal waar'))) /nrow(filter(data_selected, (user_status_intention == 'Nooit gebruikt en neutraal'))))*100, digits = 1)`%). 
@@ -3692,6 +3695,22 @@ ft_out
 
 ```
 
+
+#### Vertrouwen in adequaatheid techniek over de tijd
+```{r chiBeliefstechnologyperformancet1t2, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Beliefs_technologyperformance_agree_cw[(data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Misschien waar')] <- "Totaal waar_cw"
+data_currentwave_wavemin1$Beliefs_technologyperformance_agree_cw[(data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Misschien niet waar')] <- "Weet niet, niet waar_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Beliefs_technologyperformance_agree_wmin1[(data_currentwave_wavemin1$Beliefs_technologyperformance_wmin1 == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_technologyperformance_wmin1 == 'Misschien waar')] <- "Totaal waar_wmin1"
+data_currentwave_wavemin1$Beliefs_technologyperformance_agree_wmin1[(data_currentwave_wavemin1$Beliefs_technologyperformance_wmin1 == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_technologyperformance_wmin1 == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_technologyperformance_wmin1 == 'Misschien niet waar')] <- "Weet niet, niet waar_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Beliefs_technologyperformance_agree_cw, data_currentwave_wavemin1$Beliefs_technologyperformance_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table) 
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was over tijd met betrekking tot het percentage dat aangaf het eens te zijn dat de CoronaMelder via bluetooth kan aangeven wie er in de buurt is geweest van een persoon die besmet is. In de huidige vragenlijst gaf `r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`% aan het eens te zijn met deze stelling, in de vorige vragenlijst was dit `r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%. 
 
 ### Maatschappelijke gevolgen gebruik CoronaMelder
 Aan de respondenten werd gevraagd in hoeverre zij dachten dat gebruik van de CoronaMelder de Nederlandse economie helpt. Ongeveer één op de drie respondenten heeft de overtuiging dat de CoronaMelder de Nederlandse economie zal helpen (`r round((nrow(filter(data, (Beliefs_benefiteconomic == 'Helemaal mee eens'| Beliefs_benefiteconomic == 'Mee eens'| Beliefs_benefiteconomic == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%).
