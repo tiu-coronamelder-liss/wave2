@@ -194,7 +194,7 @@ data_wave_min1_in <- read.spss('L_CoronaMelder_wave1_3p.sav', to.data.frame=TRUE
 data_wave_min1 <- data_wave_min1_in[!is.na(data_wave_min1_in$duur),]
 
 # Combine the dataset of the current wave (wave 2) with the previous wave (wave1). Only keep participants that completed both waves. 
-data_currentwave_wavemin1 = merge(data_wave_min1, data, by = "nomem_encr", all = FALSE, suffix = c("_cw", "_wmin1")) # all = FALSE to only include IDs present in both datasets.
+data_currentwave_wavemin1 = merge(data_wave_min1, data, by = "nomem_encr", all = FALSE, suffix = c("_wmin1", "_cw")) # all = FALSE to only include IDs present in both datasets.
 
 ```
 ```{=openxml}
