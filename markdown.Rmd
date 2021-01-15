@@ -2918,7 +2918,7 @@ ft_out
 
 #### Verwachte effectiviteit CoronaMelder over de tijd
 
-```{r, echo=FALSE, fig.width=7, fig.cap="Verwachte effectiviteit CoronaMelder over de tijd"}
+```{r, echo=FALSE, fig.width=7, dpi = 300, fig.cap="Verwachte effectiviteit CoronaMelder over de tijd"}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("PE1_UTAUT", 
