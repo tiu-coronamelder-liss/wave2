@@ -258,7 +258,7 @@ Onderzoeksvraag 1: Wat is de temporele dynamiek van de adoptie van digitale cont
   
 Onderzoeksvraag 2: Wat is de temporele dynamiek van de intentie om zich te houden aan de adviezen die worden gecommuniceerd in de digitale contacttracing app CoronaMelder en welke factoren (persoonlijk, sociaal, omgeving, app-gerelateerd) zijn hierop van invloed? 
 
-De huidige rapportage beslaat de data van de eerste meting. Hierdoor zijn effecten alleen voor de eerste wave getoond. Effecten over de tijd zullen in volgende rapportages getoond worden. De datacollectie (wave 1) van deze rapportage vond plaats tussen 19 oktober en 1 november 2020, 1.5 week na de landelijke lancering op 10 oktober 2020. Vervolgmetingen vinden plaats 1.5 maand na lancering (wave 2: 07-12 t/m 20-12), 3 maanden na lancering (18-01 t/m 31-01) en 5 maanden na lancering (15-03 t/m 29-03). 
+De huidige rapportage beslaat de data van de eerste meting. Hierdoor zijn effecten alleen voor de eerste wave getoond. Effecten over de tijd zullen in volgende rapportages getoond worden. De datacollectie (wave 2) van deze rapportage vond plaats tussen 7 december en 20 december 2020, 1.5 maand na de landelijke lancering op 10 oktober 2020. Vervolgmetingen vinden plaats 3 maanden na lancering (18-01 t/m 31-01) en 5 maanden na lancering (15-03 t/m 29-03). 
 
 De (9 minuten durende) vragenlijst bevat op elk meetmoment de volgende onderwerpen:   
 - Gebruiksgedrag van CoronaMelder  
@@ -276,7 +276,7 @@ Het LISS panel is bij uitstek geschikt voor onderzoek waarbij een goede vertegen
 
 Panelleden ontvangen € 7,50 voor een vragenlijst met een invultijd van dertig minuten. Omdat het veldwerk standaard bijna een maand duurt en men twee herinneringen krijgt, is iedereen (van oud tot jong, werkend of niet werkend en/of tijdelijk afwezig) in de gelegenheid de vragenlijsten in te vullen.
 
-## Huidige rapportage: Meting 1 
+## Huidige rapportage: Meting 2
 
 Datum van dataverzameling: 7 december 2020 – 20 december 2020.
 
@@ -7519,12 +7519,14 @@ ft_out
 
 
 #### Schijnveiligheid over de tijd
+NB: Er is een wijziging doorgevoerd in de vraagstelling. De vraag "Als ik de CoronaMelder app gebruik, verlaag ik mijn risico op een besmetting met het coronavirus", werd in wave 1 (19 oktober t/m 1 november 2020) gesteld als "De CoronaMelder zorgt ervoor dat ik niet besmet raak met het coronavirus".
+
 ```{r, echo=FALSE, fig.width=7, fig.cap="Schijnveiligheid over de tijd"}
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("Beliefs_falsesecurity1",
                         "Beliefs_falsesecurity2")
 graph_questionlabels = c("Als ik de CoronaMelder gebruik, hoef ik me minder aan de andere maatregelen te houden",
-                         "De CoronaMelder zorgt ervoor dat ik niet besmet raak met het coronavirus"); 
+                         "Als ik de CoronaMelder app gebruik, verlaag ik mijn risico op een besmetting met het coronavirus"); 
 
 # Which values do we want to include in the table cells?
 include_vars = c("Zeker waar", "Misschien waar")
