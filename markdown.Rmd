@@ -5270,6 +5270,22 @@ ft_out
 
 ```
 
+#### Verplichting tot gebruik over tijd
+```{r McNemarBeliefsvoluntarinesovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Beliefs_voluntariness_agree_cw[(data$Beliefs_voluntariness == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_voluntariness_cw == 'Mee eens'| data_currentwave_wavemin1$Beliefs_voluntariness_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Beliefs_voluntariness_agree_cw[(data_currentwave_wavemin1$Beliefs_voluntariness_cw == 'Neutraal'| data_currentwave_wavemin1$Beliefs_voluntariness_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$Beliefs_voluntariness_cw == 'Oneens'| data$Beliefs_voluntariness == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Beliefs_voluntariness_agree_wmin1[(data$Beliefs_voluntariness == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_voluntariness_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Beliefs_voluntariness_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Beliefs_voluntariness_agree_wmin1[(data_currentwave_wavemin1$Beliefs_voluntariness_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Beliefs_voluntariness_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$Beliefs_voluntariness_wmin1 == 'Oneens'| data$Beliefs_voluntariness == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Beliefs_voluntariness_agree_cw, data_currentwave_wavemin1$Beliefs_voluntariness_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_voluntariness_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_voluntariness_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men zich verplicht voelt om de CoronaMelder te gebruiken.
+
 ### Affectieve reacties
 In kaart is gebracht in welke mate de CoronaMelder in het algemeen en meer specifiek het ontvangen van een melding een emotionele reaktie opwekt. Bijna een kwart geeft aan de CoronaMelder eng te vinden (`r round((nrow(filter(data, (Beliefs_fear == 'Helemaal mee eens'| Beliefs_fear == 'Mee eens'| Beliefs_fear == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%) en 
 `r round((nrow(filter(data, (Beliefs_fear == 'Neutraal'))) /nrow(data))*100, digits = 1)`% staat hier neutraal tegenover. Een iets groter aandeel zou angstig worden bij het ontvangen van een melding (`r round((nrow(filter(data, (Beliefs_notificationfear == 'Helemaal mee eens'| Beliefs_notificationfear == 'Mee eens'| Beliefs_notificationfear == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%) en `r round((nrow(filter(data, (Beliefs_notificationfear == 'Neutraal'))) /nrow(data))*100, digits = 1)`% staat hier neutraal in.
@@ -5536,6 +5552,36 @@ ft_out
 
 ```
 
+
+#### Affectieve reakties over tijd
+```{r McNemarBeliefs_fearovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Beliefs_fear_agree_cw[(data$Beliefs_fear == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_fear_cw == 'Mee eens'| data_currentwave_wavemin1$Beliefs_fear_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Beliefs_fear_agree_cw[(data_currentwave_wavemin1$Beliefs_fear_cw == 'Neutraal'| data_currentwave_wavemin1$Beliefs_fear_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$Beliefs_fear_cw == 'Oneens'| data$Beliefs_fear == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Beliefs_fear_agree_wmin1[(data$Beliefs_fear == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_fear_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Beliefs_fear_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Beliefs_fear_agree_wmin1[(data_currentwave_wavemin1$Beliefs_fear_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Beliefs_fear_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$Beliefs_fear_wmin1 == 'Oneens'| data$Beliefs_fear == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Beliefs_fear_agree_cw, data_currentwave_wavemin1$Beliefs_fear_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_fear_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_fear_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men de CoronaMelder app eng vindt. 
+```{r McNemarBeliefs_notificationfear, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Beliefs_notificationfear_agree_cw[(data$Beliefs_notificationfear == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_notificationfear_cw == 'Mee eens'| data_currentwave_wavemin1$Beliefs_notificationfear_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Beliefs_notificationfear_agree_cw[(data_currentwave_wavemin1$Beliefs_notificationfear_cw == 'Neutraal'| data_currentwave_wavemin1$Beliefs_notificationfear_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$Beliefs_notificationfear_cw == 'Oneens'| data$Beliefs_notificationfear == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Beliefs_notificationfear_agree_wmin1[(data$Beliefs_notificationfear == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_notificationfear_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Beliefs_notificationfear_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Beliefs_notificationfear_agree_wmin1[(data_currentwave_wavemin1$Beliefs_notificationfear_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Beliefs_notificationfear_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$Beliefs_notificationfear_wmin1 == 'Oneens'| data$Beliefs_notificationfear == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Beliefs_notificationfear_agree_cw, data_currentwave_wavemin1$Beliefs_notificationfear_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+Daarnaast liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_notificationfear_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_notificationfear_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men angstig zou worden als men een melding ontvangt van de CoronaMelder app.
 
 ### Sociale invloeden
 Om de sociale invloeden in kaart te brengen is gevraagd naar descriptieve en injunctieve normen en is gevraagd om een indicatie te geven van welk percentage van de Nederlandse bevolking de CoronaMelder gebruikt. Opvallend is dat een relatief laag percentage (`r round((nrow(filter(data, (SI1_UTAUT == 'Helemaal mee eens'| SI1_UTAUT == 'Mee eens'| SI1_UTAUT == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%) van de respondenten het eens is met de stelling dat veel mensen in hun omgeving de CoronaMelder gebruiken. Daarnaast staat een groot percentage neutraal tegenover deze stelling (`r round((nrow(filter(data, (SI1_UTAUT == 'Neutraal'))) /nrow(data))*100, digits = 1)`%).
