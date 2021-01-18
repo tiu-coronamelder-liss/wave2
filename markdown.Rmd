@@ -21,6 +21,7 @@ knitr::opts_chunk$set(warning = FALSE)
 # For importing SPSS files
 library(foreign)
 
+
 # For filtering
 library(plyr)
 library(dplyr)
@@ -3598,8 +3599,6 @@ data_selected$user_status_intention = droplevels(data_selected$user_status_inten
 chisq.table = table(data_selected$Beliefs_technologyperformance_agree, data_selected$user_status_intention)
 chisqtest = chisq.test(chisq.table) 
 
-
-
 ```
 
 Daarnaast liet de chi kwadraat toets (X²(`r chisqtest$parameter`) = `r round(chisqtest$statistic, digits = 2)`, p `r ifelse(chisqtest$p.value < 0.001, "<0.001", paste("=", round(chisqtest$p.value, digits = 3)))`) zien dat er `r if(chisqtest$p.value > 0.05){"g"}`een significant verschil was in het percentage gebruikers (`r round((nrow(filter(data_selected, (user_status_intention == 'Gebruiker'& Beliefs_technologyperformance_agree == 'Totaal waar'))) /nrow(filter(data_selected, (user_status_intention == 'Gebruiker'))))*100, digits = 1)`%) dat aangaf dat de CoronaMelder via bluetooth kan aangeven wie er in de buurt is geweest van een persoon die besmet is, vergeleken met degenen die de app nooit hebben gebruikt, vergeleken met degenen die de app nooit hebben gebruikt en daarnaast aangaven neutraal te zijn in hun intentie om de CoronaMelder te gaan gebruiken (`r round((nrow(filter(data_selected, (user_status_intention == 'Nooit gebruikt en neutraal' & Beliefs_technologyperformance_agree == 'Totaal waar'))) /nrow(filter(data_selected, (user_status_intention == 'Nooit gebruikt en neutraal'))))*100, digits = 1)`%). 
@@ -3697,7 +3696,7 @@ ft_out
 
 
 #### Vertrouwen in adequaatheid techniek over de tijd
-```{r chiBeliefstechnologyperformancet1t2, echo=FALSE}
+```{r chiBeliefstechnologyperformanceovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$Beliefs_technologyperformance_agree_cw[(data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Misschien waar')] <- "Totaal waar_cw"
 data_currentwave_wavemin1$Beliefs_technologyperformance_agree_cw[(data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_technologyperformance_cw == 'Misschien niet waar')] <- "Weet niet, niet waar_cw"
@@ -3710,7 +3709,7 @@ data_currentwave_wavemin1$Beliefs_technologyperformance_agree_wmin1[(data_curren
 mcnemar.table = table(data_currentwave_wavemin1$Beliefs_technologyperformance_agree_cw, data_currentwave_wavemin1$Beliefs_technologyperformance_agree_wmin1)
 mcnemartest = mcnemar.test(mcnemar.table) 
 ```
-De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat de CoronaMelder via bluetooth kan aangeven wie er in de buurt is geweest van een persoon die besmet is.  
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de CoronaMelder via bluetooth kan aangeven wie er in de buurt is geweest van een persoon die besmet is, waar is.  
 
 ### Maatschappelijke gevolgen gebruik CoronaMelder
 Aan de respondenten werd gevraagd in hoeverre zij dachten dat gebruik van de CoronaMelder de Nederlandse economie helpt. Ongeveer één op de drie respondenten heeft de overtuiging dat de CoronaMelder de Nederlandse economie zal helpen (`r round((nrow(filter(data, (Beliefs_benefiteconomic == 'Helemaal mee eens'| Beliefs_benefiteconomic == 'Mee eens'| Beliefs_benefiteconomic == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%).
@@ -3946,6 +3945,24 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 
 ```
+
+
+#### Maatschappelijke gevolgen gebruik CoronaMelder over tijd
+```{r chiBeliefsbenefiteconomicovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Beliefs_benefiteconomic_agree_cw[(data$Beliefs_benefiteconomic == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Mee eens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Beliefs_benefiteconomic_agree_cw[(data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Neutraal'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Oneens'| data$Beliefs_benefiteconomic == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Beliefs_benefiteconomic_agree_wmin1[(data$Beliefs_benefiteconomic == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Beliefs_benefiteconomic_agree_wmin1[(data_currentwave_wavemin1$Beliefs_benefiteconomic_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Beliefs_benefiteconomic_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_wmin1 == 'Oneens'| data$Beliefs_benefiteconomic == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Beliefs_benefiteconomic_agree_cw, data_currentwave_wavemin1$Beliefs_benefiteconomic_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_benefiteconomic_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_benefiteconomic_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het gebruik van de CoronaMelder de Nederlandse economie helpt.
+
 
 ### Verwachte gebruiksvriendelijkheid, inspanningsverwachting en zelfeffectiviteit
 
