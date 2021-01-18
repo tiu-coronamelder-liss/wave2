@@ -7635,7 +7635,21 @@ ft_out
 ```
 
 
+#### Intentie tot doorgeven GGD-sleutel na positieve test over tijd
+``` {r McNemarsharekeyovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Intention_reportinfection_agree_cw[(data$Intention_reportinfection == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_reportinfection_cw == 'Mee eens'| data_currentwave_wavemin1$Intention_reportinfection_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Intention_reportinfection_agree_cw[(data_currentwave_wavemin1$Intention_reportinfection_cw == 'Neutraal'| data_currentwave_wavemin1$Intention_reportinfection_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$Intention_reportinfection_cw == 'Oneens'| data$Intention_reportinfection == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
 
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Intention_reportinfection_agree_wmin1[(data$Intention_reportinfection == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_reportinfection_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Intention_reportinfection_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Intention_reportinfection_agree_wmin1[(data_currentwave_wavemin1$Intention_reportinfection_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Intention_reportinfection_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$Intention_reportinfection_wmin1 == 'Oneens'| data$Intention_reportinfection == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Intention_reportinfection_agree_cw, data_currentwave_wavemin1$Intention_reportinfection_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_reportinfection_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_reportinfection_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling om een positieve testuitslag door te geven via de CoronaMelder app.
 
 ### Onbeoogde effecten: schijnveiligheid
 Een gevoel van schijnveiligheid zou kunnen optreden bij de adoptie van de CoronaMelder, wat ervoor zou kunnen zorgen dat andere maatregelen minder nodig worden geacht. Uit de antwoorden op de stelling of men zich minder aan andere maatregelen kan houden bij het gebruik van de CoronaMelder, blijkt dat slechts een klein aandeel denkt dat dit het geval is. Het aandeel dat op deze vraag 'zeker waar' of 'misschien waar' antwoordt, is `r round((nrow(filter(data, (Beliefs_falsesecurity1 == 'Zeker waar'| Beliefs_falsesecurity1 == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%. Een iets groter percentage denkt dat de CoronaMelder ervoor zorgt dat je niet besmet kunt raken (`r round((nrow(filter(data, (Beliefs_falsesecurity2 == 'Zeker waar'| Beliefs_falsesecurity2 == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%).
@@ -7754,8 +7768,36 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
-
 #### Schijnveiligheid over de tijd
+```{r McNemarfalsesecurity1overtime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Beliefs_falsesecurity1_agree_cw[(data_currentwave_wavemin1$Beliefs_falsesecurity1_cw == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_falsesecurity1_cw == 'Misschien waar')] <- "Totaal waar_cw"
+data_currentwave_wavemin1$Beliefs_falsesecurity1_agree_cw[(data_currentwave_wavemin1$Beliefs_falsesecurity1_cw == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_falsesecurity1_cw == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_falsesecurity1_cw == 'Misschien niet waar')] <- "Weet niet, niet waar_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Beliefs_falsesecurity1_agree_wmin1[(data_currentwave_wavemin1$Beliefs_falsesecurity1_wmin1 == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_falsesecurity1_wmin1 == 'Misschien waar')] <- "Totaal waar_wmin1"
+data_currentwave_wavemin1$Beliefs_falsesecurity1_agree_wmin1[(data_currentwave_wavemin1$Beliefs_falsesecurity1_wmin1 == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_falsesecurity1_wmin1 == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_falsesecurity1_wmin1 == 'Misschien niet waar')] <- "Weet niet, niet waar_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Beliefs_falsesecurity1_agree_cw, data_currentwave_wavemin1$Beliefs_falsesecurity1_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table) 
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_falsesecurity1_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_falsesecurity1_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat als de CoronaMelder wordt gebruikt, men zich niet meer hoeft te houden aan andere maatregelen, waar is.  
+```{r McNemarfalsesecurity2overtime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Beliefs_falsesecurity2_agree_cw[(data_currentwave_wavemin1$Beliefs_falsesecurity2_cw == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_falsesecurity2_cw == 'Misschien waar')] <- "Totaal waar_cw"
+data_currentwave_wavemin1$Beliefs_falsesecurity2_agree_cw[(data_currentwave_wavemin1$Beliefs_falsesecurity2_cw == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_falsesecurity2_cw == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_falsesecurity2_cw == 'Misschien niet waar')] <- "Weet niet, niet waar_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Beliefs_falsesecurity2_agree_wmin1[(data_currentwave_wavemin1$Beliefs_falsesecurity2_wmin1 == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_falsesecurity2_wmin1 == 'Misschien waar')] <- "Totaal waar_wmin1"
+data_currentwave_wavemin1$Beliefs_falsesecurity2_agree_wmin1[(data_currentwave_wavemin1$Beliefs_falsesecurity2_wmin1 == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_falsesecurity2_wmin1 == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_falsesecurity2_wmin1 == 'Misschien niet waar')] <- "Weet niet, niet waar_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Beliefs_falsesecurity2_agree_cw, data_currentwave_wavemin1$Beliefs_falsesecurity2_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table) 
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_falsesecurity2_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_falsesecurity2_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de CoronaMelder ervoor zrogt dat men niet besmet raakt met het coronavirus, waar is.  
+
 NB: Er is een wijziging doorgevoerd in de vraagstelling. De vraag "Als ik de CoronaMelder app gebruik, verlaag ik mijn risico op een besmetting met het coronavirus", werd in wave 1 (19 oktober t/m 1 november 2020) gesteld als "De CoronaMelder zorgt ervoor dat ik niet besmet raak met het coronavirus".
 
 ```{r, echo=FALSE, fig.width=7, fig.cap="Schijnveiligheid over de tijd"}
