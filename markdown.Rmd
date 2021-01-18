@@ -3948,7 +3948,7 @@ ft_out
 
 
 #### Maatschappelijke gevolgen gebruik CoronaMelder over tijd
-```{r chiBeliefsbenefiteconomicovertime, echo=FALSE}
+```{r McNemarBeliefsbenefiteconomicovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$Beliefs_benefiteconomic_agree_cw[(data$Beliefs_benefiteconomic == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Mee eens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
 data_currentwave_wavemin1$Beliefs_benefiteconomic_agree_cw[(data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Neutraal'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Oneens'| data$Beliefs_benefiteconomic == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
@@ -4089,7 +4089,7 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
-In onderstaande grafiek en tabellen zijn de resultaten voor de respondenten die de CoronaMelder momenteel niet gebruiken, te vinden. 
+In onderstaande grafiek en tabellen zijn de resultaten voor de respondenten die de CoronaMelder momenteel gebruiken, te vinden. 
 
 ```{r effortexpectancyusers, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Zelfeffectiviteit bij respondenten die de CoronaMelder op dit moment gebruiken", tab.cap="Zelfeffectiviteit bij respondenten die de CoronaMelder op dit moment gebruiken"}
 
@@ -4208,7 +4208,7 @@ ft_out
 
 ```
 
-Zelfeffectiviteit is de persoonlijke inschatting van de eigen bekwaamheid om bepaald gedrag uit te kunnen voeren. Er is gevraagd of men zich zelf in staat achtte om de CoronaMelder te gebruiken:`r round((nrow(filter(data, (HBM_selfefficacy_CoronaMelder == 'Helemaal mee eens'| HBM_selfefficacy_CoronaMelder == 'Mee eens'| HBM_selfefficacy_CoronaMelder == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% acht zichzelf in staat de CoronaMelder te gebruiken. In onderstaande grafiek en tabel zijn de resultaten voor de gehele sample te zien. 
+Zelfeffectiviteit is de persoonlijke inschatting van de eigen bekwaamheid om bepaald gedrag uit te kunnen voeren. Er is gevraagd of men zich zelf in staat achtte om de CoronaMelder te gebruiken: `r round((nrow(filter(data, (HBM_selfefficacy_CoronaMelder == 'Helemaal mee eens'| HBM_selfefficacy_CoronaMelder == 'Mee eens'| HBM_selfefficacy_CoronaMelder == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% acht zichzelf in staat de CoronaMelder te gebruiken. In onderstaande grafiek en tabel zijn de resultaten voor de gehele sample te zien. 
 
 ```{r selfefficacyCM, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Zelfeffectiviteit om CoronaMelder te gebruiken", tab.cap="Zelfeffectiviteit om CoronaMelder te gebruiken"}
 
@@ -4320,6 +4320,21 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
+#### Verwachte gebruiksvriendelijkheid, inspanningsverwachting en zelfeffectiviteit over tijd
+```{r McNemarselfefficacyCMovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_agree_cw[(data$HBM_selfefficacy_CoronaMelder == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_agree_cw[(data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Neutraal'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Oneens'| data$HBM_selfefficacy_CoronaMelder == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_agree_wmin1[(data$HBM_selfefficacy_CoronaMelder == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_wmin1 == 'Mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_agree_wmin1[(data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_wmin1 == 'Neutraal'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_wmin1 == 'Oneens'| data$HBM_selfefficacy_CoronaMelder == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_agree_cw, data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_CoronaMelder_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_CoronaMelder_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men in staat is om de CoronaMelder te gebruiken.
 
 ### Technologie gerelateerde belemmeringen
 Vanuit het UTAUT is bekend dat technologie gerelateerde belemmeringen een rol kunnen spelen in de adoptie van nieuwe technologieën zoals de CoronaMelder. In totaal gaf slechts `r round((nrow(filter(data, (FC1_UTAUT == 'Helemaal mee oneens'| FC1_UTAUT == 'Oneens'| FC1_UTAUT == 'Een beetje oneens'))) /nrow(data))*100, digits = 1)`% aan het oneens te zijn met de stelling dat hij/zij beschikking heeft over een smartphone waarmee de CoronaMelder gebruikt kan worden. Daarnaast gaf een laag percentage (`r round((nrow(filter(data, (FC2_UTAUT == 'Helemaal mee oneens'| FC2_UTAUT == 'Oneens'| FC2_UTAUT == 'Een beetje oneens'))) /nrow(data))*100, digits = 1)`%) aan het oneens te zijn met de stelling dat hij/zij genoeg (technische) kennis heeft om de CoronaMelder te gebruiken.  
@@ -4587,6 +4602,38 @@ ft_out
 
 ```
 
+#### Technologie gerelateerde belemmeringen over tijd
+```{r McNemarFC1utautovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$FC1_UTAUT_agree_cw[(data$FC1_UTAUT == 'Helemaal mee eens'| data_currentwave_wavemin1$FC1_UTAUT_cw == 'Mee eens'| data_currentwave_wavemin1$FC1_UTAUT_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$FC1_UTAUT_agree_cw[(data_currentwave_wavemin1$FC1_UTAUT_cw == 'Neutraal'| data_currentwave_wavemin1$FC1_UTAUT_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$FC1_UTAUT_cw == 'Oneens'| data$FC1_UTAUT == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$FC1_UTAUT_agree_wmin1[(data$FC1_UTAUT == 'Helemaal mee eens'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Mee eens'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$FC1_UTAUT_agree_wmin1[(data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Neutraal'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Oneens'| data$FC1_UTAUT == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$FC1_UTAUT_agree_cw, data_currentwave_wavemin1$FC1_UTAUT_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+
+print(mcnemartest)
+print(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (FC1_UTAUT_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (FC1_UTAUT_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men een smartphone tot beschikking heeft waarmee de CoronaMelder kan worden gebruikt.
+```{r McNemarFC2utautovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$FC2_UTAUT_agree_cw[(data$FC2_UTAUT == 'Helemaal mee eens'| data_currentwave_wavemin1$FC2_UTAUT_cw == 'Mee eens'| data_currentwave_wavemin1$FC2_UTAUT_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$FC2_UTAUT_agree_cw[(data_currentwave_wavemin1$FC2_UTAUT_cw == 'Neutraal'| data_currentwave_wavemin1$FC2_UTAUT_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$FC2_UTAUT_cw == 'Oneens'| data$FC2_UTAUT == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$FC2_UTAUT_agree_wmin1[(data$FC2_UTAUT == 'Helemaal mee eens'| data_currentwave_wavemin1$FC2_UTAUT_wmin1 == 'Mee eens'| data_currentwave_wavemin1$FC2_UTAUT_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$FC2_UTAUT_agree_wmin1[(data_currentwave_wavemin1$FC2_UTAUT_wmin1 == 'Neutraal'| data_currentwave_wavemin1$FC2_UTAUT_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$FC2_UTAUT_wmin1 == 'Oneens'| data$FC2_UTAUT == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$FC2_UTAUT_agree_cw, data_currentwave_wavemin1$FC2_UTAUT_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+Daarnaast liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (FC2_UTAUT_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (FC2_UTAUT_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling genoeg technische kennis te hebben om de CoronaMelder te gebruiken.
 
 ### Persoonlijke voor- en nadelen van gebruik
 Belangrijke variabelen uit het UTAUT en het HBM zijn de verwachte voor- en nadelen van het gebruik. Het percentage van de respondenten dat voordelen ziet van het gebruik ligt vrij laag (`r round((nrow(filter(data, (HBM_perceivedbenefits_CoronaMelder == 'Helemaal mee eens'| HBM_perceivedbenefits_CoronaMelder == 'Mee eens'| HBM_perceivedbenefits_CoronaMelder == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%), evenals het percentage dat nadelen ziet van het gebruik (`r round((nrow(filter(data, (HBM_barriers_CoronaMelder == 'Helemaal mee eens'| HBM_barriers_CoronaMelder == 'Mee eens'| HBM_barriers_CoronaMelder == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%).
@@ -4857,6 +4904,36 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 
 ```
+
+#### Persoonlijke voor- en nadelen van gebruik over tijd
+```{r McNemarHBMperceivedbenefitsCoronaMelderutautovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_agree_cw[(data$HBM_perceivedbenefits_CoronaMelder == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_agree_cw[(data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_cw == 'Neutraal'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_cw == 'Oneens'| data$HBM_perceivedbenefits_CoronaMelder == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_agree_wmin1[(data$HBM_perceivedbenefits_CoronaMelder == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_wmin1 == 'Mee eens'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_agree_wmin1[(data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_wmin1 == 'Neutraal'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_wmin1 == 'Oneens'| data$HBM_perceivedbenefits_CoronaMelder == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_agree_cw, data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_perceivedbenefits_CoronaMelder_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_perceivedbenefits_CoronaMelder_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het persoonlijke voordelen heeft om de CoronaMelder te gebruiken.
+```{r McNemarHBMbarriersCoronaMelderutautovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$HBM_barriers_CoronaMelder_agree_cw[(data$HBM_barriers_CoronaMelder == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_barriers_CoronaMelder_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_barriers_CoronaMelder_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$HBM_barriers_CoronaMelder_agree_cw[(data_currentwave_wavemin1$HBM_barriers_CoronaMelder_cw == 'Neutraal'| data_currentwave_wavemin1$HBM_barriers_CoronaMelder_cw == 'Een beetje mee oneens'| data_currentwave_wavemin1$HBM_barriers_CoronaMelder_cw == 'Oneens'| data$HBM_barriers_CoronaMelder == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$HBM_barriers_CoronaMelder_agree_wmin1[(data$HBM_barriers_CoronaMelder == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_barriers_CoronaMelder_wmin1 == 'Mee eens'| data_currentwave_wavemin1$HBM_barriers_CoronaMelder_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$HBM_barriers_CoronaMelder_agree_wmin1[(data_currentwave_wavemin1$HBM_barriers_CoronaMelder_wmin1 == 'Neutraal'| data_currentwave_wavemin1$HBM_barriers_CoronaMelder_wmin1 == 'Een beetje mee oneens'| data_currentwave_wavemin1$HBM_barriers_CoronaMelder_wmin1 == 'Oneens'| data$HBM_barriers_CoronaMelder == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$HBM_barriers_CoronaMelder_agree_cw, data_currentwave_wavemin1$HBM_barriers_CoronaMelder_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+Daarnaast liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_barriers_CoronaMelder_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_barriers_CoronaMelder_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het persoonlijke nadelen heeft om de CoronaMelder te gebruiken.
 
 ### Verplichting tot gebruik
 Er is ook gekeken naar de mate waarin iemand een verplichting voelt om de techniek te gebruiken, en hoe mensen reageren als zij het gevoel hebben dat er wordt aangedrongen op het gebruiken van de CoronaMelder. Slechts `r round((nrow(filter(data, (Beliefs_voluntariness == 'Helemaal mee eens'| Beliefs_voluntariness == 'Mee eens'| Beliefs_voluntariness == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% voelt zicht verplicht tot het gebruik, en `r round((nrow(filter(data, (Beliefs_voluntariness2 == 'Helemaal mee eens'| Beliefs_voluntariness2 == 'Mee eens'| Beliefs_voluntariness2 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% voelt zich niet vrij om zelf te kiezen of hij/zij de CoronaMelder gebruikt. Daarnaast gaf `r round((nrow(filter(data, (Beliefs_AffectIrritation == 'Helemaal mee eens'| Beliefs_AffectIrritation == 'Mee eens'| Beliefs_AffectIrritation == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% aan zich te irriteren aan het aandringen op het gebruik van de CoronaMelder, en Slechts `r round((nrow(filter(data, (Beliefs_AffectAnger == 'Helemaal mee eens'| Beliefs_AffectAnger == 'Mee eens'| Beliefs_AffectAnger == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% is hier boos over.
