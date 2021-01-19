@@ -2919,7 +2919,7 @@ ft_out
 
 #### Verwachte effectiviteit CoronaMelder over de tijd
 
-```{r, echo=FALSE, fig.width=7, dpi = 300, fig.cap="Verwachte effectiviteit CoronaMelder over de tijd"}
+```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Verwachte effectiviteit CoronaMelder over de tijd, totaal percentage dat minstens een beetje eens was met de stelling (een beetje mee eens, mee eens, helemaal mee eens)."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("PE1_UTAUT", 
@@ -2967,14 +2967,10 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   geom_point() +
   theme_bw() + 
   labs(x = "", y = "", fill = "") +
-  scale_color_manual(values=brewer.pal(8, "Dark2")) +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
   scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
-  scale_x_discrete(labels=wave_labels) +
-  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) +
-  geom_text_repel(
-    aes(label = round(perc_positiveanswer * 100, digits = 1)), data = data_ends,
-    fontface ="plain", color = "black", size = 3
-    )
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
 aligned <- align_plots(baseplot, theplot, align="v")
 ggdraw(aligned[[2]])
@@ -3709,7 +3705,61 @@ data_currentwave_wavemin1$Beliefs_technologyperformance_agree_wmin1[(data_curren
 mcnemar.table = table(data_currentwave_wavemin1$Beliefs_technologyperformance_agree_cw, data_currentwave_wavemin1$Beliefs_technologyperformance_agree_wmin1)
 mcnemartest = mcnemar.test(mcnemar.table) 
 ```
-De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de CoronaMelder via bluetooth kan aangeven wie er in de buurt is geweest van een persoon die besmet is, waar is.  
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_technologyperformance_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de CoronaMelder via bluetooth kan aangeven wie er in de buurt is geweest van een persoon die besmet is, waar is. 
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Vertrouwen in techniek over de tijd, totaal percentage dat de stelling minstens misschien waar vond (misschien waar, zeker waar)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Beliefs_technologyperformance")
+graph_questionlabels = c("De techniek (bluetooth) die wordt gebruikt in de CoronaMelder geeft aan wie er in de buurt is geweest van een persoon die besmet is") 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Zeker waar", "Misschien waar")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 ### Maatschappelijke gevolgen gebruik CoronaMelder
 Aan de respondenten werd gevraagd in hoeverre zij dachten dat gebruik van de CoronaMelder de Nederlandse economie helpt. Ongeveer één op de drie respondenten heeft de overtuiging dat de CoronaMelder de Nederlandse economie zal helpen (`r round((nrow(filter(data, (Beliefs_benefiteconomic == 'Helemaal mee eens'| Beliefs_benefiteconomic == 'Mee eens'| Beliefs_benefiteconomic == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%).
@@ -3947,7 +3997,7 @@ ft_out
 ```
 
 
-#### Maatschappelijke gevolgen gebruik CoronaMelder over tijd
+#### Maatschappelijke gevolgen gebruik CoronaMelder over de tijd
 ```{r McNemarBeliefsbenefiteconomicovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$Beliefs_benefiteconomic_agree_cw[(data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Mee eens'| data_currentwave_wavemin1$Beliefs_benefiteconomic_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -3963,6 +4013,59 @@ mcnemartest = mcnemar.test(mcnemar.table)
 ```
 De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_benefiteconomic_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_benefiteconomic_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het gebruik van de CoronaMelder de Nederlandse economie helpt.
 
+```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Maatschappelijke gevolgen CoronaMelder over de tijd, totaal percentage dat het minstens een beetje eens was met de stelling (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Beliefs_benefiteconomic")
+graph_questionlabels = c("Gebruik van de CoronaMelder helpt de Nederlandse economie") 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 ### Verwachte gebruiksvriendelijkheid, inspanningsverwachting en zelfeffectiviteit
 
@@ -4336,6 +4439,60 @@ mcnemartest = mcnemar.test(mcnemar.table)
 ```
 De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_CoronaMelder_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_CoronaMelder_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men in staat is om de CoronaMelder te gebruiken.
 
+```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Zelfeffectiviteit om CoronaMelder te gebruiken over de tijd, totaal percentage dat het minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("HBM_selfefficacy_CoronaMelder")
+graph_questionlabels = c("Ik ben in staat om de CoronaMelder te gebruiken"); 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
+
 ### Technologie gerelateerde belemmeringen
 Vanuit het UTAUT is bekend dat technologie gerelateerde belemmeringen een rol kunnen spelen in de adoptie van nieuwe technologieën zoals de CoronaMelder. In totaal gaf slechts `r round((nrow(filter(data, (FC1_UTAUT == 'Helemaal mee oneens'| FC1_UTAUT == 'Oneens'| FC1_UTAUT == 'Een beetje oneens'))) /nrow(data))*100, digits = 1)`% aan het oneens te zijn met de stelling dat hij/zij beschikking heeft over een smartphone waarmee de CoronaMelder gebruikt kan worden. Daarnaast gaf een laag percentage (`r round((nrow(filter(data, (FC2_UTAUT == 'Helemaal mee oneens'| FC2_UTAUT == 'Oneens'| FC2_UTAUT == 'Een beetje oneens'))) /nrow(data))*100, digits = 1)`%) aan het oneens te zijn met de stelling dat hij/zij genoeg (technische) kennis heeft om de CoronaMelder te gebruiken.  
 
@@ -4609,7 +4766,7 @@ data_currentwave_wavemin1$FC1_UTAUT_agree_cw[(data_currentwave_wavemin1$FC1_UTAU
 data_currentwave_wavemin1$FC1_UTAUT_agree_cw[(data_currentwave_wavemin1$FC1_UTAUT_cw == 'Neutraal'| data_currentwave_wavemin1$FC1_UTAUT_cw == 'Een beetje oneens'| data_currentwave_wavemin1$FC1_UTAUT_cw == 'Oneens'| data_currentwave_wavemin1$FC1_UTAUT_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
 
 # Calculate a proportion for the variable for the previous wave. 
-data_currentwave_wavemin1$FC1_UTAUT_agree_wmin1[(data$FC1_UTAUT == 'Helemaal mee eens'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Mee eens'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$FC1_UTAUT_agree_wmin1[(data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Mee eens'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
 data_currentwave_wavemin1$FC1_UTAUT_agree_wmin1[(data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Neutraal'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$FC1_UTAUT_wmin1 == 'Oneens'| data$FC1_UTAUT == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
 
 # Convert into a table that can be used for the chi square test
@@ -4631,6 +4788,62 @@ mcnemar.table = table(data_currentwave_wavemin1$FC2_UTAUT_agree_cw, data_current
 mcnemartest = mcnemar.test(mcnemar.table)
 ```
 Daarnaast liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (FC2_UTAUT_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (FC2_UTAUT_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling genoeg technische kennis te hebben om de CoronaMelder te gebruiken.
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=3, dpi = 300, fig.cap="Technologie gerelateerde belemmeringen over de tijd, totaal percentage dat het minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("FC1_UTAUT", 
+                        "FC2_UTAUT")
+graph_questionlabels = c("Ik heb een smartphone tot mijn beschikking met toegang tot het internet waarmee ik de CoronaMelder kan gebruiken", 
+                         "Ik heb genoeg (technische) kennis om de CoronaMelder te gebruiken"); 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 ### Persoonlijke voor- en nadelen van gebruik
 Belangrijke variabelen uit het UTAUT en het HBM zijn de verwachte voor- en nadelen van het gebruik. Het percentage van de respondenten dat voordelen ziet van het gebruik ligt vrij laag (`r round((nrow(filter(data, (HBM_perceivedbenefits_CoronaMelder == 'Helemaal mee eens'| HBM_perceivedbenefits_CoronaMelder == 'Mee eens'| HBM_perceivedbenefits_CoronaMelder == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%), evenals het percentage dat nadelen ziet van het gebruik (`r round((nrow(filter(data, (HBM_barriers_CoronaMelder == 'Helemaal mee eens'| HBM_barriers_CoronaMelder == 'Mee eens'| HBM_barriers_CoronaMelder == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%).
@@ -4931,6 +5144,64 @@ mcnemar.table = table(data_currentwave_wavemin1$HBM_barriers_CoronaMelder_agree_
 mcnemartest = mcnemar.test(mcnemar.table)
 ```
 Daarnaast liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_barriers_CoronaMelder_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_barriers_CoronaMelder_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het persoonlijke nadelen heeft om de CoronaMelder te gebruiken.
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=3, dpi = 300, fig.cap="Persoonlijke voor- en nadelen van gebruik over de tijd, totaal percentage dat het minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("HBM_perceivedbenefits_CoronaMelder",
+                        "HBM_barriers_CoronaMelder")
+graph_questionlabels = c("Het heeft voor mij persoonlijke voordelen om de CoronaMelder te gebruiken",
+                         "Het heeft voor mij persoonlijke nadelen om de CoronaMelder te gebruiken"); 
+
+
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 ### Verplichting tot gebruik
 Er is ook gekeken naar de mate waarin iemand een verplichting voelt om de techniek te gebruiken, en hoe mensen reageren als zij het gevoel hebben dat er wordt aangedrongen op het gebruiken van de CoronaMelder. Slechts `r round((nrow(filter(data, (Beliefs_voluntariness == 'Helemaal mee eens'| Beliefs_voluntariness == 'Mee eens'| Beliefs_voluntariness == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% voelt zicht verplicht tot het gebruik, en `r round((nrow(filter(data, (Beliefs_voluntariness2 == 'Helemaal mee eens'| Beliefs_voluntariness2 == 'Mee eens'| Beliefs_voluntariness2 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% voelt zich niet vrij om zelf te kiezen of hij/zij de CoronaMelder gebruikt. Daarnaast gaf `r round((nrow(filter(data, (Beliefs_AffectIrritation == 'Helemaal mee eens'| Beliefs_AffectIrritation == 'Mee eens'| Beliefs_AffectIrritation == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% aan zich te irriteren aan het aandringen op het gebruik van de CoronaMelder, en Slechts `r round((nrow(filter(data, (Beliefs_AffectAnger == 'Helemaal mee eens'| Beliefs_AffectAnger == 'Mee eens'| Beliefs_AffectAnger == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% is hier boos over.
@@ -5283,6 +5554,62 @@ mcnemartest = mcnemar.test(mcnemar.table)
 ```
 De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_voluntariness_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_voluntariness_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men zich verplicht voelt om de CoronaMelder te gebruiken.
 
+```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Verplichting tot gebruik over de tijd, totaal percentage dat het minstens een beetje eens was met de stelling (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Beliefs_voluntariness")
+graph_questionlabels = c("Ik voel me verplicht om de CoronaMelder te gebruiken"); 
+
+
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
+
 ### Affectieve reacties
 In kaart is gebracht in welke mate de CoronaMelder in het algemeen en meer specifiek het ontvangen van een melding een emotionele reaktie opwekt. Bijna een kwart geeft aan de CoronaMelder eng te vinden (`r round((nrow(filter(data, (Beliefs_fear == 'Helemaal mee eens'| Beliefs_fear == 'Mee eens'| Beliefs_fear == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%) en 
 `r round((nrow(filter(data, (Beliefs_fear == 'Neutraal'))) /nrow(data))*100, digits = 1)`% staat hier neutraal tegenover. Een iets groter aandeel zou angstig worden bij het ontvangen van een melding (`r round((nrow(filter(data, (Beliefs_notificationfear == 'Helemaal mee eens'| Beliefs_notificationfear == 'Mee eens'| Beliefs_notificationfear == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%) en `r round((nrow(filter(data, (Beliefs_notificationfear == 'Neutraal'))) /nrow(data))*100, digits = 1)`% staat hier neutraal in.
@@ -5579,6 +5906,62 @@ mcnemar.table = table(data_currentwave_wavemin1$Beliefs_notificationfear_agree_c
 mcnemartest = mcnemar.test(mcnemar.table)
 ```
 Daarnaast liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_notificationfear_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_notificationfear_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men angstig zou worden als men een melding ontvangt van de CoronaMelder app.
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=3, dpi = 300, fig.cap="Affectieve reakties over de tijd, totaal percentage dat het minstens een beetje eens was met de stelling (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Beliefs_fear", 
+                        "Beliefs_notificationfear")                     
+graph_questionlabels = c("Ik vind de CoronaMelder app eng", 
+                         "Ik zou angstig worden als ik een melding ontvang van de CoronaMelder app") 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 ### Sociale invloeden
 Om de sociale invloeden in kaart te brengen is gevraagd naar descriptieve en injunctieve normen en is gevraagd om een indicatie te geven van welk percentage van de Nederlandse bevolking de CoronaMelder gebruikt. Opvallend is dat een relatief laag percentage (`r round((nrow(filter(data, (SI1_UTAUT == 'Helemaal mee eens'| SI1_UTAUT == 'Mee eens'| SI1_UTAUT == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%) van de respondenten het eens is met de stelling dat veel mensen in hun omgeving de CoronaMelder gebruiken. Daarnaast staat een groot percentage neutraal tegenover deze stelling (`r round((nrow(filter(data, (SI1_UTAUT == 'Neutraal'))) /nrow(data))*100, digits = 1)`%).
@@ -6022,7 +6405,7 @@ data_currentwave_wavemin1$Beliefs_civicduty_agree_cw[(data_currentwave_wavemin1$
 data_currentwave_wavemin1$Beliefs_civicduty_agree_cw[(data_currentwave_wavemin1$Beliefs_civicduty_cw == 'Neutraal'| data_currentwave_wavemin1$Beliefs_civicduty_cw == 'Een beetje oneens'| data_currentwave_wavemin1$Beliefs_civicduty_cw == 'Oneens'| data_currentwave_wavemin1$Beliefs_civicduty_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
 
 # Calculate a proportion for the variable for the previous wave. 
-data_currentwave_wavemin1$Beliefs_civicduty_agree_wmin1[(data_currentwave_wavemin1$Beliefs_civicduty_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_civicduty_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Beliefs_civicduty_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Beliefs_civicduty_agree_wmin1[(data_currentwave_wavemin1$Beliefs_civicduty_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_civicduty_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Beliefs_civicduty_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
 data_currentwave_wavemin1$Beliefs_civicduty_agree_wmin1[(data_currentwave_wavemin1$Beliefs_civicduty_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Beliefs_civicduty_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$Beliefs_civicduty_wmin1 == 'Oneens'| data_currentwave_wavemin1$Beliefs_civicduty_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
 
 # Convert into a table that can be used for the chi square test
@@ -6030,6 +6413,64 @@ mcnemar.table = table(data_currentwave_wavemin1$Beliefs_civicduty_agree_cw, data
 mcnemartest = mcnemar.test(mcnemar.table)
 ```
 De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_civicduty_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_civicduty_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het gebruiken van de CoronaMelder je een goede burger maakt. 
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=3.5, dpi = 300, fig.cap="Sociale invloeden over de tijd, totaal percentage dat het minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("SI1_UTAUT", 
+                        "SI2_UTAUT", 
+                        "Beliefs_civicduty")                     
+graph_questionlabels = c("Veel mensen in mijn omgeving gebruiken de CoronaMelder app", 
+                         "Mensen in mijn directe omgeving vinden dat ik de CoronaMelder app moet gebruiken", 
+                         "Het gebruiken van de CoronaMelder maakt je een goed burger") 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 ### Privacy en dataveiligheid 
 Nog een factor die een rol kan spelen in de adoptie is de verwachting met betrekking tot de privacy en dataveiligheid. Een opvallend groot aandeel beoordeelt de foutieve stellingen dat de CoronaMelder de locatie bijhoudt (`r round((nrow(filter(data, (Beliefs_locationmonitoring == 'Zeker waar'| Beliefs_locationmonitoring == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%) en dat de CoronaMelder persoonsgegevens opslaat (`r round((nrow(filter(data, (Beliefs_identitymonitoring == 'Zeker waar'| Beliefs_identitymonitoring == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%) als waar. Daartegenover staat wel dat men het idee heeft dat er vertrouwelijk wordt omgegaan met de informatie (`r round((nrow(filter(data, (Beliefs_datasafety == 'Zeker waar'| Beliefs_datasafety == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%). 
@@ -6435,7 +6876,7 @@ data_currentwave_wavemin1$Beliefs_locationmonitoring_agree_wmin1[(data_currentwa
 mcnemar.table = table(data_currentwave_wavemin1$Beliefs_locationmonitoring_agree_cw, data_currentwave_wavemin1$Beliefs_locationmonitoring_agree_wmin1)
 mcnemartest = mcnemar.test(mcnemar.table) 
 ```
-Ook liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_locationmonitoring_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_locationmonitoring_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de CoronaMelder namen of persoonsgegevens opslaat, waar is.  
+Ook liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_locationmonitoring_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_locationmonitoring_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de CoronaMelder locaties bijhoudt, waar is.  
 ```{r McNemarBeliefsidenditymonitoringovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$Beliefs_identitymonitoring_agree_cw[(data_currentwave_wavemin1$Beliefs_identitymonitoring_cw == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_identitymonitoring_cw == 'Misschien waar')] <- "Totaal waar_cw"
@@ -6449,7 +6890,66 @@ data_currentwave_wavemin1$Beliefs_identitymonitoring_agree_wmin1[(data_currentwa
 mcnemar.table = table(data_currentwave_wavemin1$Beliefs_identitymonitoring_agree_cw, data_currentwave_wavemin1$Beliefs_identitymonitoring_agree_wmin1)
 mcnemartest = mcnemar.test(mcnemar.table) 
 ```
-Daarnaast liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_identitymonitoring_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_identitymonitoring_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat het gebruik van de CoronaMelder app ervoor zorgt dat de overheid meer controle over de bevolking krijgt, waar is.  
+Daarnaast liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_identitymonitoring_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_identitymonitoring_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de CoronaMelder namen of persoonsgegevens opslaat, waar is.  
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=3.5, dpi = 300, fig.cap="Privacy en dataveiligheid over de tijd, totaal percentage dat de stellingen minstens misschien waar vond (misschien waar, zeker waar)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Beliefs_datasafety",
+                        "Beliefs_locationmonitoring", 
+                        "Beliefs_identitymonitoring")
+graph_questionlabels = c("Alle informatie die ik geef in de CoronaMelder wordt vertrouwelijk behandeld",
+                         "De CoronaMelder houdt mijn locatie bij", 
+                         "De CoronaMelder slaat mijn naam of persoonsgegevens op"); 
+
+
+# Which values do we want to include in the table cells?
+include_vars = c("Zeker waar", "Misschien waar")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 ## Effecten
 ### Meldingen en reacties op adviezen gegeven in de melding
@@ -7077,7 +7577,7 @@ data_currentwave_wavemin1$HBM_selfefficacy_Test_agree_wmin1[(data_currentwave_wa
 mcnemar.table = table(data_currentwave_wavemin1$HBM_selfefficacy_Test_agree_cw, data_currentwave_wavemin1$HBM_selfefficacy_Test_agree_wmin1)
 mcnemartest = mcnemar.test(mcnemar.table)
 ```
-De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_Test_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_Test_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men in stata is om te bellen voor een test.
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_Test_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_Test_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men in staat is om te bellen voor een test.
 ```{r McNemarHBMselfefficacyquarantaineovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$HBM_selfefficacy_Quarantaine_agree_cw[(data_currentwave_wavemin1$HBM_selfefficacy_Quarantaine_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_Quarantaine_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_Quarantaine_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -7120,6 +7620,66 @@ mcnemar.table = table(data_currentwave_wavemin1$HBM_selfefficacy_GP_agree_cw, da
 mcnemartest = mcnemar.test(mcnemar.table)
 ```
 Tot slot liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_GP_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_selfefficacy_GP_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men in staat is om de huisarts te bellen. 
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=4, dpi = 300, fig.cap="Zelfeffectiviteit om adviezen op te volgen over de tijd, totaal percentage dat het minstens een beetje eens is met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("HBM_selfefficacy_Test", 
+                        "HBM_selfefficacy_Quarantaine", 
+                        "HBM_selfefficacy_Visits",
+                        "HBM_selfefficacy_GP")
+graph_questionlabels = c("Ik ben in staat om te bellen voor een test", 
+                         "Ik ben in staat om zo lang thuis te blijven als wordt geadviseerd", 
+                         "Ik ben in staat om geen bezoek te ontvangen",
+                         "Ik ben in staat om de huisarts te bellen"); 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 
 ##### Gepercipieerde persoonlijke voor- en nadelen van opvolgen adviezen
@@ -7404,6 +7964,66 @@ mcnemartest = mcnemar.test(mcnemar.table)
 ```
 Tot slot liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_perceivedbenefits_GP_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_perceivedbenefits_GP_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het persoonlijke voordelen heeft om de huisarts te bellen. 
 
+```{r, echo=FALSE, fig.width=5.5, fig.height=4, dpi = 300, fig.cap="Gepercipieerde persoonlijke voordelen van opvolgen adviezen over tijd, totaal percentage dat het minstens een beetje eens is met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("HBM_perceivedbenefits_Test", 
+                        "HBM_perceivedbenefits_Quarantaine", 
+                        "HBM_perceivedbenefits_Visits",
+                        "HBM_perceivedbenefits_GP")
+graph_questionlabels = c("Het heeft voor mij persoonlijke voordelen om te bellen voor een test", 
+                         "Het heeft voor mij persoonlijke voordelen om zo lang thuis te blijven als wordt geadviseerd", 
+                         "Het heeft voor mij persoonlijke voordelen om geen bezoek te ontvangen",
+                         "Het heeft voor mij persoonlijke voordelen om de huisarts te bellen"); 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
+
 ###### Gepercipieerde persoonlijke nadelen van opvolgen adviezen over tijd
 ```{r McNemarHBMbarrierstestovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
@@ -7461,6 +8081,67 @@ mcnemar.table = table(data_currentwave_wavemin1$HBM_barriers_GP_agree_cw, data_c
 mcnemartest = mcnemar.test(mcnemar.table)
 ```
 Tot slot liet de McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_barriers_GP_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_barriers_GP_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het persoonlijke voordelen heeft om de huisarts te bellen. 
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=4, dpi = 300, fig.cap="Gepercipieerde persoonlijke nadelen van opvolgen adviezen over tijd, totaal percentage dat het minstens een beetje eens is met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("HBM_barriers_Test", 
+                        "HBM_barriers_Quarantaine", 
+                        "HBM_barriers_Visits",
+                        "HBM_barriers_GP")
+
+graph_questionlabels = c("Het heeft voor mij persoonlijke nadelen om te bellen voor een test", 
+                         "Het heeft voor mij persoonlijke nadelen om zo lang thuis te blijven als wordt geadviseerd", 
+                         "Het heeft voor mij persoonlijke nadelen om geen bezoek te ontvangen",
+                         "Het heeft voor mij persoonlijke nadelen om de huisarts te bellen"); 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 ##### Verplichting tot opvolgen adviezen
 Er is onderzocht in hoeverre respondenten zich verplicht voelen om de adviezen uit meldingen van de CoronaMelder op te volgen, en of dit leidt tot irritatie. Hieruit blijkt dat `r round((nrow(filter(data, (AdherenceNotification_voluntariness1 == 'Helemaal mee eens'| AdherenceNotification_voluntariness1 == 'Mee eens'| AdherenceNotification_voluntariness1 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% zich verplicht voelt om het advies uit de melding op te volgen, `r round((nrow(filter(data, (AdherenceNotification_voluntariness2 == 'Helemaal mee eens'| AdherenceNotification_voluntariness2 == 'Mee eens'| AdherenceNotification_voluntariness2 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% vindt dat het advies uit de melding hun vrijheid bedreigt om zelf te kiezen wat zij doen, `r round((nrow(filter(data, (AdherenceNotification_AffectAnger == 'Helemaal mee eens'| AdherenceNotification_AffectAnger == 'Mee eens'| AdherenceNotification_AffectAnger == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% boos wordt van het advies gegeven in de melding, en `r round((nrow(filter(data, (AdherenceNotification_AffectIrritation == 'Helemaal mee eens'| AdherenceNotification_AffectIrritation == 'Mee eens'| AdherenceNotification_AffectIrritation == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% aangeeft dat het advies gegeven in de melding hen irriteert.
@@ -7815,6 +8496,60 @@ mcnemartest = mcnemar.test(mcnemar.table)
 ```
 De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_reportinfection_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_reportinfection_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling om een positieve testuitslag door te geven via de CoronaMelder app.
 
+```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Intentie tot doorgeven GGD-sleutel na positieve test over tijd, totaal percentage dat het minstens een beetje eens is met de stelling (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Intention_reportinfection")
+graph_questionlabels = c("Als ik besmet ben, ben ik van plan om dit door te geven via de CoronaMelder app"); 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
+
 ### Onbeoogde effecten: schijnveiligheid
 Een gevoel van schijnveiligheid zou kunnen optreden bij de adoptie van de CoronaMelder, wat ervoor zou kunnen zorgen dat andere maatregelen minder nodig worden geacht. Uit de antwoorden op de stelling of men zich minder aan andere maatregelen kan houden bij het gebruik van de CoronaMelder, blijkt dat slechts een klein aandeel denkt dat dit het geval is. Het aandeel dat op deze vraag 'zeker waar' of 'misschien waar' antwoordt, is `r round((nrow(filter(data, (Beliefs_falsesecurity1 == 'Zeker waar'| Beliefs_falsesecurity1 == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%. Een iets groter percentage denkt dat de CoronaMelder ervoor zorgt dat je niet besmet kunt raken (`r round((nrow(filter(data, (Beliefs_falsesecurity2 == 'Zeker waar'| Beliefs_falsesecurity2 == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%).
 
@@ -7960,11 +8695,11 @@ data_currentwave_wavemin1$Beliefs_falsesecurity2_agree_wmin1[(data_currentwave_w
 mcnemar.table = table(data_currentwave_wavemin1$Beliefs_falsesecurity2_agree_cw, data_currentwave_wavemin1$Beliefs_falsesecurity2_agree_wmin1)
 mcnemartest = mcnemar.test(mcnemar.table) 
 ```
-De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_falsesecurity2_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_falsesecurity2_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de CoronaMelder ervoor zrogt dat men niet besmet raakt met het coronavirus, waar is.  
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_falsesecurity2_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_falsesecurity2_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de CoronaMelder ervoor zorgt dat men niet besmet raakt met het coronavirus, waar is.  
 
 NB: Er is een wijziging doorgevoerd in de vraagstelling. De vraag "Als ik de CoronaMelder app gebruik, verlaag ik mijn risico op een besmetting met het coronavirus", werd in wave 1 (19 oktober t/m 1 november 2020) gesteld als "De CoronaMelder zorgt ervoor dat ik niet besmet raak met het coronavirus".
 
-```{r, echo=FALSE, fig.width=7, fig.cap="Schijnveiligheid over de tijd"}
+```{r, echo=FALSE, fig.width=5.5, fig.height=3, dpi = 300, fig.cap="Schijnveiligheid over tijd, totaal percentage dat de stellingen minstens misschien waar vindt (misschien waar, zeker waar)."}
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("Beliefs_falsesecurity1",
                         "Beliefs_falsesecurity2")
@@ -8009,14 +8744,10 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   geom_point() +
   theme_bw() + 
   labs(x = "", y = "", fill = "") +
-  scale_color_manual(values=brewer.pal(8, "Dark2")) +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
   scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
-  scale_x_discrete(labels=wave_labels) +
-  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) +
-  geom_text_repel(
-    aes(label = round(perc_positiveanswer * 100, digits = 1)), data = data_ends,
-    fontface ="plain", color = "black", size = 3
-    )  
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
 
 aligned <- align_plots(baseplot, theplot, align="v")
 ggdraw(aligned[[2]])
