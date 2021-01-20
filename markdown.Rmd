@@ -232,7 +232,7 @@ data_allwaves = merge(data_wave1, data_wave2, by = "nomem_encr", all = FALSE, su
 De CoronaMelder app is ontwikkeld door het ministerie van Volksgezondheid, Welzijn en Sport en wordt nu landelijk gebruikt in de strijd tegen het coronavirus. Het doel van dit onderzoek is om de adoptie van de app en de (intentie tot) opvolging van de in de app gegeven adviezen te onderzoeken en te verklaren.  
 
 ## Methode {.unlisted .unnumbered}
-In het kader van de evaluatie van de CoronaMelder wordt er een longitudinaal vragenlijstonderzoek uitgevoerd via het LISS panel. De datacollectie (wave 1) van deze rapportage vond plaats tussen 19 oktober en 1 november 2020, 1.5 week na de landelijke lancering op 10 oktober 2020. Aan dit onderzoek hebben `r nrow(data)` (gemiddelde leeftijd in jaren: `r round(mean(data$leeftijd), digits = 1)`, standaarddeviatie: `r round(sd(data$leeftijd), digits = 1)`; `r round((nrow(filter(data, geslacht == 'Vrouw'))/nrow(data))*100, digits = 2)`% vrouw) respondenten deelgenomen.   
+In het kader van de evaluatie van de CoronaMelder wordt er een longitudinaal vragenlijstonderzoek uitgevoerd via het LISS panel. De datacollectie (wave 2) van deze rapportage vond plaats tussen 7 december en 20 december 2020, 2 maanden week na de landelijke lancering op 10 oktober 2020. Aan dit onderzoek hebben `r nrow(data)` (gemiddelde leeftijd in jaren: `r round(mean(data$leeftijd), digits = 1)`, standaarddeviatie: `r round(sd(data$leeftijd), digits = 1)`; `r round((nrow(filter(data, geslacht == 'Vrouw'))/nrow(data))*100, digits = 2)`% vrouw) respondenten deelgenomen.   
 
 ## Resultaten en aanbevelingen{.unlisted .unnumbered}  
 
@@ -2070,10 +2070,10 @@ ft_out
 
 ```
 
-#### Algemene opvattingen over het coronavirus naar gebruikersstatus
+### Algemene opvattingen over het coronavirus naar gebruikersstatus
 Chi kwadraat toetsen zijn uitgevoerd om te bepalen of het totaal aandeel respondenten die denkt dat de stelling waar is (*zeker waar* en *misschien waar*) verschilt tussen de huidige gebruikers en degenen die de CoronaMelder nooit gebruikt hebben. Daarnaast is gekeken of de subgroep die de CoronaMelder nooit gebruikt heeft en aangaf neutraal te zijn met betrekking tot toekomstig gebruik verschilt van de huidig gebruikers. 
 
-##### Complottheorieën naar gebruikersstatus
+#### Complottheorieën naar gebruikersstatus
 
 ```{r chiconspiracy1usernonuser, echo=FALSE}
 # First calculate a proportion for the variable. 
@@ -2225,7 +2225,7 @@ ft_out
 
 ```
 
-##### Vertrouwen in de overheid naar gebruikersstatus
+#### Vertrouwen in de overheid naar gebruikersstatus
 
 ```{r chiPBeliefsTrustGovernmentusernonuser1, echo=FALSE}
 # First calculate a proportion for the variable. 
