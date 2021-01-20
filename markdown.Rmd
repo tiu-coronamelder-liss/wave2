@@ -308,7 +308,7 @@ Voor de meeste onderwerpen zijn de resultaten uitgesplitst naar gebruikersstatus
 
 Voor de uitsplitsing naar gebruikersstatus werd een respondent aangemerkt als *gebruiker* indien deze op de vraag 'Welke situatie geldt voor u?' het antwoord 'Ik gebruik de CoronaMelder app op dit moment' had gegeven. Iemand is aangemerkt als *Niet gebruiker* indien de respondent op deze vraag het antwoord 'Ik heb de CoronaMelder app nooit gebruikt' had gegeven. Niet gebruikers die aangaven het in meer of mindere mate *oneens* te zijn met de stelling 'Ik ben van plan de CoronaMelder in de komende 2 maanden te gebruiken' werden aangemerkt als *Niet gebruiker - niet van plan om te gaan gebruiken*. Niet gebruikers die aangaven het in meer of mindere mate *eens* te zijn met de stelling 'Ik ben van plan de CoronaMelder in de komende 2 maanden te gebruiken' werden aangemerkt als *Niet gebruiker - wel van plan om te gaan gebruiken*. Niet gebruikers die *neutraal* antwoorden op de stelling 'Ik ben van plan de CoronaMelder in de komende 2 maanden te gebruiken' werden aangemerkt als *Niet gebruiker - neutraal*. Chi kwadraat toetsen zijn uitgevoerd om te bepalen of het totaal aandeel respondenten dat het eens (een beetje, eens, helemaal mee eens) is met de verschillende stellingen verschilt tussen de huidige gebruikers en degenen die de CoronaMelder nooit gebruikt hebben. Daarnaast is gekeken of de subgroep die de CoronaMelder nooit gebruikt heeft en aangaf neutraal te zijn met betrekking tot toekomstig gebruik verschilt van de huidig gebruikers.
 
-Voor de vergelijkingen over tijd is een McNemar chi kwadraattoets uitgevoerd om te toetsen of het totaal aandeel respondenten dat het eens (een beetje, eens, helemaal mee eens) is met de verschillende stellingen verschilt tussen de huidige en de vorige meting. Bij deze toetsen en in de bijbehorende grafieken zijn alleen de respondenten meegnomen die zowel de huidige als de vorige vragenlijst volledig hebben ingevuld. Daarom kan het zijn dat percentages eens die in dit rapport worden getoond voor de vorige wave afwijken van de percentages die gepresenteerd werden in de vorige rapportage. 
+Voor de vergelijkingen over tijd is een McNemar chi kwadraattoets uitgevoerd om te toetsen of het totaal aandeel respondenten dat het eens (een beetje, eens, helemaal mee eens) is met de verschillende stellingen verschilt tussen de huidige en de vorige meting. Bij deze toetsen en in de bijbehorende grafieken zijn alleen de respondenten meegenomen die zowel de huidige als de vorige vragenlijst volledig hebben ingevuld. Daarom kan het zijn dat percentages eens die in dit rapport worden getoond voor de vorige wave afwijken van de percentages die gepresenteerd werden in de vorige rapportage. 
 
 ```{=openxml}
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
@@ -490,8 +490,71 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
+##### Waargenomen ernst en vatbaarheid over de tijd
+
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=4, dpi = 300, fig.cap="Waargenomen ernst en vatbaarheid over de tijd, totaal percentage dat minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("HBM_PSus_self1", 
+                        "HBM_PSus_other2", 
+                        "HBM_PSev_self1", 
+                        "HBM_PSev_other2")
+graph_questionlabels = c("Ik loop in de komende twee maanden risico op een besmetting met het coronavirus", 
+                         "Als ik besmet raak is de kans  groot dat ik anderen zal besmetten", 
+                         "Ik vind het erg om besmet te raken", 
+                         "Ik vind het erg als ik andere mensen besmet"); 
+
+# Which values do we want to include in the table cells?
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
+
 #### Naleven algemene gedragsregels
-In kaart is gebracht in hoeverre de respondenten zich in de afgelopen twee maanden aan een aantal van de algemene gedragsregels hebben gehouden (zie figuur \@ref(fig:behavioradhgenmeasures)). `r round((nrow(filter(data, (Behavior_AdherenceGeneralMeasures_handwashing == 'Altijd'| Behavior_AdherenceGeneralMeasures_handwashing == 'Meestal'| Behavior_AdherenceGeneralMeasures_handwashing == 'Vaak'))) /nrow(data))*100, digits = 1)`% gaf aan, regelmatig, vaak of altijd handen te wassen. Ongeveer de helft van de respondenten (`r round((nrow(filter(data, (Behavior_AdherenceGeneralMeasures_distance == 'Nooit'| Behavior_AdherenceGeneralMeasures_distance == 'Zelden'| Behavior_AdherenceGeneralMeasures_distance == 'Soms'))) /nrow(data))*100, digits = 1)`%) gaf aan nooit, zelden of soms op minder dan 1,5 afstand van mensen buiten het huishouden te zijn geweest. Tot slot gaf `r round((nrow(filter(data, (Behavior_AdherenceGeneralMeasures_avoidbusyplaces == 'Nooit'| Behavior_AdherenceGeneralMeasures_avoidbusyplaces == 'Zelden'| Behavior_AdherenceGeneralMeasures_avoidbusyplaces == 'Soms'))) /nrow(data))*100, digits = 1)`% aan nooit, zelden of soms op een plek te zijn geweest waar anderhalve meter afstand houden eigenlijk niet mogelijk was. 
+In kaart is gebracht in hoeverre de respondenten zich in de afgelopen twee maanden aan een aantal van de algemene gedragsregels hebben gehouden (zie figuur \@ref(fig:behavioradhgenmeasures)). `r round((nrow(filter(data, (Behavior_AdherenceGeneralMeasures_handwashing == 'Altijd'| Behavior_AdherenceGeneralMeasures_handwashing == 'Meestal'| Behavior_AdherenceGeneralMeasures_handwashing == 'Vaak'))) /nrow(data))*100, digits = 1)`% gaf aan, vaak, meestal of altijd handen te wassen. Ongeveer de helft van de respondenten (`r round((nrow(filter(data, (Behavior_AdherenceGeneralMeasures_distance == 'Nooit'| Behavior_AdherenceGeneralMeasures_distance == 'Zelden'| Behavior_AdherenceGeneralMeasures_distance == 'Soms'))) /nrow(data))*100, digits = 1)`%) gaf aan nooit, zelden of soms op minder dan 1,5 afstand van mensen buiten het huishouden te zijn geweest. Tot slot gaf `r round((nrow(filter(data, (Behavior_AdherenceGeneralMeasures_avoidbusyplaces == 'Nooit'| Behavior_AdherenceGeneralMeasures_avoidbusyplaces == 'Zelden'| Behavior_AdherenceGeneralMeasures_avoidbusyplaces == 'Soms'))) /nrow(data))*100, digits = 1)`% aan nooit, zelden of soms op een plek te zijn geweest waar anderhalve meter afstand houden eigenlijk niet mogelijk was. 
 
 ```{r behavioradhgenmeasures, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Naleving algemene gedragsregels", tab.cap="Naleving algemene gedragsregels. In de afgelopen twee maanden, hoe vaak... "}
 
@@ -727,6 +790,119 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
+##### Naleven algemene gedragsregels over de tijd
+```{r, echo=FALSE, fig.width=5.5, fig.height=3.5, dpi = 300, fig.cap="Naleven algemene gedragsregels over de tijd, totaal percentage dat vaak, meestal, of altijd het gedrag heeft uitgevoerd."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Behavior_AdherenceGeneralMeasures_handwashing", 
+                        "Behavior_AdherenceGeneralMeasures_distance", 
+                        "Behavior_AdherenceGeneralMeasures_avoidbusyplaces")
+graph_questionlabels = c("In de afgelopen maanden, hoe vaak hebt u uw handen gewassen?", 
+                         "In de afgelopen maanden, hoe vaak bent u minder dan op 1,5m afstand geweest van mensen buiten uw huishouden?", 
+                         "In de afgelopen maanden, hoe vaak bent u op een plek geweest waar het eigenlijk te druk was om 1,5m afstand te houden?"); 
+
+
+# Which values do we want to include in the table cells?
+include_vars = c("Altijd", "Meestal", "Vaak")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Naleving algemene gedragsregels bij klachten, totaal percentage dat vaak, meestal, of altijd naar buiten is geweest met klachten."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Behavior_AdherenceGeneralMeasures_quarantaine")
+graph_questionlabels = c("Bent u, toen u deze klachten had, naar buiten geweest?"); 
+
+include_vars = c("Vaak", "Meestal", "Altijd")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
+
 #### Intentie tot naleving algemene gedragsregels
 Er is gevraagd naar in welke mate men van plan is om zich de komende twee maanden te houden aan een aantal van de algemene gedragsregels. Het percentage respondenten dat aangeeft de intentie te hebben om zich aan de voorgestelde gedragsregels te houden ligt hoog (handen regelmatig wassen: `r round((nrow(filter(data, (Intention_AdherenceGeneralMeasures_handwashing == 'Helemaal mee eens'| Intention_AdherenceGeneralMeasures_handwashing == 'Mee eens'| Intention_AdherenceGeneralMeasures_handwashing == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%; afstand houden: `r round((nrow(filter(data, (Intention_AdherenceGeneralMeasures_distance == 'Helemaal mee eens'| Intention_AdherenceGeneralMeasures_distance == 'Mee eens'| Intention_AdherenceGeneralMeasures_distance == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%; drukke plekken vermijden: `r round((nrow(filter(data, (Intention_AdherenceGeneralMeasures_avoidbusyplaces == 'Helemaal mee eens'| Intention_AdherenceGeneralMeasures_avoidbusyplaces == 'Mee eens'| Intention_AdherenceGeneralMeasures_avoidbusyplaces == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%; thuisblijven bij klachten: `r round((nrow(filter(data, (Intention_AdherenceGeneralMeasures_quarantaine == 'Helemaal mee eens'| Intention_AdherenceGeneralMeasures_quarantaine == 'Mee eens'| Intention_AdherenceGeneralMeasures_quarantaine == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%). Onderstaande figuur geeft de intenties weer (figuur \@ref(fig:intentionadhgenmeasures)).
 
@@ -845,6 +1021,66 @@ ft_out <- width(ft_out, j = 1, width = 1.5)
 ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_table))-1))
 
 ft_out
+```
+
+##### Intentie tot naleving algemene gedragsregels over de tijd
+```{r, echo=FALSE, fig.width=5.5, fig.height=4.0, dpi = 300, fig.cap="Intentie tot naleving algemene gedragsregels over de tijd, totaal percentage dat minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Intention_AdherenceGeneralMeasures_handwashing", 
+                        "Intention_AdherenceGeneralMeasures_distance", 
+                        "Intention_AdherenceGeneralMeasures_avoidbusyplaces", 
+                        "Intention_AdherenceGeneralMeasures_quarantaine")
+graph_questionlabels = c("Ik ben van plan om de komende 2 maanden mijn handen regelmatig te wassen", 
+                         "Ik ben van plan om de komende 2 maanden 1,5 meter afstand te houden van mensen buiten mijn huishouden", 
+                         "Ik ben van plan om de komende 2 maanden drukke plekken te vermijden", 
+                         "Ik ben van plan om de komende 2 maanden thuis te blijven als ik last heb van klachten die passen bij het coronavirus"); 
+
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
 ```
 
 ### Algemene opvattingen over het coronavirus
@@ -969,6 +1205,62 @@ ft_out <- width(ft_out, j = 1, width = 1.5)
 ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_table))-1))
 
 ft_out
+```
+
+##### Complottheorieën over de tijd
+```{r, echo=FALSE, fig.width=5.5, fig.height=3.0, dpi = 300, fig.cap="Complottheorieën over de tijd, totaal percentage waar (misschien waar, zeker waar)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Beliefs_Conspiracy1", 
+                        "Beliefs_Conspiracy2")
+graph_questionlabels = c("Het coronavirus is een biologisch wapen dat in een laboratorium is gemaakt", 
+                         "De uitbraak van het coronavirus heeft te maken met (de aanleg van) het 5G netwerk"); 
+
+include_vars = c("Zeker waar", "Misschien waar")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
 ```
 
 #### Vertrouwen in aanpak van de overheid
@@ -1207,8 +1499,62 @@ ft_out
 #ggplot(data=data, aes(fill=Awareness, x=geslacht)) + geom_bar(position=position_fill(reverse = TRUE), aes(y = (..count..)/sum(..count..))) + scale_y_continuous(labels=percent) + scale_x_discrete(labels=c("man", "vrouw")) + coord_flip() + labs(x = " ", y = "", fill = "") + ggtitle("Bekendheid Coronamelder per geslacht") + scale_fill_manual(values=my_palette5) + guides(fill = guide_legend(reverse = TRUE))
 ```
 
+### Bekendheid met CoronaMelder over de tijd
+```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Bekendheid met CoronaMelder over de tijd, totaal percentage dat bekend is met de app (een beetje bekend, redelijk bekend, bekend, heel erg bekend)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("Awareness")
+graph_questionlabels = c("Hoe bekend was u met de CoronaMelder?"); 
+
+include_vars = c("Een beetje bekend", "Redelijk bekend", "Bekend", "Heel erg bekend")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
+
 ## Gebruik CoronaMelder
-Van alle respondenten gaf `r round(nrow(filter(data, Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment'))`) aan dat hij/zij de CoronaMelder op dit moment gebruikt en `r round(nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt'))`) geeft aan de CoronaMelder niet te gebruiken. Slechts `r round(nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app in het verleden wel gebruikt maar op dit moment niet meer'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app in het verleden wel gebruikt maar op dit moment niet meer'))`)gaf aan de CoronaMelder in het verleden gebruikt te hebben maar op dit moment niet meer. 
+Van alle respondenten gaf `r round(nrow(filter(data, Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment'))`) aan dat hij/zij de CoronaMelder op dit moment gebruikt en `r round(nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt'))`) geeft aan de CoronaMelder niet te gebruiken. Slechts `r round(nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app in het verleden wel gebruikt maar op dit moment niet meer'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app in het verleden wel gebruikt maar op dit moment niet meer'))`) gaf aan de CoronaMelder in het verleden gebruikt te hebben maar op dit moment niet meer. 
 
 ## Intentie tot (blijvend) gebruik CoronaMelder
 Er werd gevraagd of de respondenten de intentie hadden om de CoronaMelder de komende twee maanden te (blijven) gebruiken. Van de respondenten die de CoronaMelder app nooit hebben gebruikt, gaf `r round((nrow(filter(data, (BI1a_UTAUT == 'Helemaal mee eens'| BI1a_UTAUT == 'Mee eens'| BI1a_UTAUT == 'Een beetje mee eens') & Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')) /nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')))*100, digits = 1)`% aan van plan te zijn om de CoronaMelder te gebruiken in de komende twee maanden (zie figuur \@ref(fig:intentiontousenonusers)). Ongeveer een kwart geeft aan hier neutraal in te staan (`r round((nrow(filter(data, (BI1a_UTAUT == 'Neutraal') & Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')) /nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')))*100, digits = 1)`%). Bijna 6 op de 10 respondenten (`r round((nrow(filter(data, (BI1a_UTAUT == 'Helemaal mee oneens'| BI1a_UTAUT == 'Oneens'| BI1a_UTAUT == 'Een beetje oneens') & Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')) /nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')))*100, digits = 1)`%) geeft aan niet van plan te zijn de CoronaMelder te gaan gebruiken.  
@@ -1450,6 +1796,117 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
+
+### Intentie tot (blijvend) gebruik CoronaMelder over de tijd
+```{r, echo=FALSE, fig.width=5.5, fig.height=3.0, dpi = 300, fig.cap="Intentie tot gebruik bij respondenten die de CoronaMelder op dit moment niet gebruiken, totaal percentage dat minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("BI1a_UTAUT", 
+                        "BI2a_UTAUT")
+graph_questionlabels = c("Ik ben van plan de CoronaMelder in de komende 2 maanden te gebruiken", 
+                         "Het is waarschijnlijk dat ik de CoronaMelder in de komende 2 maanden zal gebruiken"); 
+
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
+
+```{r, echo=FALSE, fig.width=5.5, fig.height=3.0, dpi = 300, fig.cap="Intentie tot gebruik bij respondenten die de CoronaMelder op dit moment al gebruiken, totaal percentage dat minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+
+# Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
+graph_variablenames = c("BI1b_UTAUT", 
+                        "BI2b_UTAUT")
+graph_questionlabels = c("Ik ben van plan de CoronaMelder in de komende 2 maanden te blijven gebruiken", 
+                         "Het is waarschijnlijk dat ik de CoronaMelder de komende 2 maanden zal blijven gebruiken"); 
+
+include_vars = c("Helemaal mee eens", "Mee eens", "Een beetje mee eens")
+
+# Which waves do we want to include in the table cells?
+include_waves = c("w1", "w2")
+
+# Labels for the waves
+wave_labels = c("19 okt-1 nov 2020", "7 dec-20 dec 2020")
+
+
+#### No changes should be needed after this point ####
+
+data_overtime = data.frame(matrix(ncol = 3, nrow = length(graph_variablenames)*length(include_waves)))
+colnames(data_overtime) <- c("wave", "variable", "perc_positiveanswer")
+
+for(wave_idx in 1:length(include_waves)) {
+
+  for(variable_idx in 1:length(graph_variablenames)) {
+    idx = (wave_idx-1)*length(graph_variablenames)+variable_idx
+    data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
+    data_overtime[idx,"wave"] = include_waves[wave_idx]
+    
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+  }
+}
+
+# Set the correct ordering of the questions (by default the first variable is placed on the bottom)
+# It is not needed to reverse the order of the questionlabels. 
+data_overtime$variable <- factor(data_overtime$variable,levels = graph_questionlabels)
+
+# Create the plot
+data_ends <- data_overtime %>% filter(wave == include_waves[-1])
+
+theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = variable)) +
+  geom_line(aes(color = variable), size=1) +
+  geom_point() +
+  theme_bw() + 
+  labs(x = "", y = "", fill = "") +
+  scale_color_manual(values=brewer.pal(8, "Dark2"), labels=stringr::str_wrap(graph_questionlabels, width = 80)) +
+  scale_y_continuous(breaks=seq(0, 1, 0.1), labels=percent_format(accuracy = 1), limits=c(0,1)) +
+  scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
+  theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
+
+aligned <- align_plots(baseplot, theplot, align="v")
+ggdraw(aligned[[2]])
+
+```
 
 ## Vergelijking gebruikers en niet gebruikers
 ### Demografische gegevens naar gebruikersstatus {#demouserstatus}
@@ -2941,7 +3398,7 @@ ft_out
 
 #### Verwachte effectiviteit CoronaMelder over de tijd
 
-```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Verwachte effectiviteit CoronaMelder over de tijd, totaal percentage dat minstens een beetje eens was met de stelling (een beetje mee eens, mee eens, helemaal mee eens)."}
+```{r, echo=FALSE, fig.width=5.5, fig.height=3, dpi = 300, fig.cap="Verwachte effectiviteit CoronaMelder over de tijd, totaal percentage dat minstens een beetje eens was met de stelling (een beetje mee eens, mee eens, helemaal mee eens)."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("PE1_UTAUT", 
@@ -6498,7 +6955,7 @@ ggdraw(aligned[[2]])
 Nog een factor die een rol kan spelen in de adoptie is de verwachting met betrekking tot de privacy en dataveiligheid. Een opvallend groot aandeel beoordeelt de foutieve stellingen dat de CoronaMelder de locatie bijhoudt (`r round((nrow(filter(data, (Beliefs_locationmonitoring == 'Zeker waar'| Beliefs_locationmonitoring == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%) en dat de CoronaMelder persoonsgegevens opslaat (`r round((nrow(filter(data, (Beliefs_identitymonitoring == 'Zeker waar'| Beliefs_identitymonitoring == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%) als waar. Daartegenover staat wel dat men het idee heeft dat er vertrouwelijk wordt omgegaan met de informatie (`r round((nrow(filter(data, (Beliefs_datasafety == 'Zeker waar'| Beliefs_datasafety == 'Misschien waar'))) /nrow(data))*100, digits = 1)`%). 
 
 
-```{r privacy, echo=FALSE, fig.width=7, fig.height=3, fig.cap="Privacy overtuigingen"}
+```{r privacy, echo=FALSE, fig.width=7, fig.height=3.5, fig.cap="Privacy overtuigingen"}
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("Beliefs_datasafety",
                         "Beliefs_locationmonitoring", 
@@ -6508,8 +6965,8 @@ graph_variablenames = c("Beliefs_datasafety",
 graph_questionlabels = c("Alle informatie die ik geef in de CoronaMelder wordt vertrouwelijk behandeld",
                          "De CoronaMelder houdt mijn locatie bij", 
                          "De CoronaMelder slaat mijn naam of persoonsgegevens op",
-                         "Het gebruik van de CoronaMelder app zorgt ervoor dat de overheid meer controle over de bevolking krijgt",
-                         "Het gebruik van de CoronaMelder app zorgt ervoor dat technologische bedrijven (bv. Google en Apple) meer macht krijgen"); 
+                         "Het gebruik van de CoronaMelder zorgt ervoor dat de overheid meer controle over de bevolking krijgt",
+                         "Het gebruik van de CoronaMelder zorgt ervoor dat technologische bedrijven meer macht krijgen"); 
 
 # These questions have 5 answer categories: Zeker niet waar - Zeker waar en Weet ik niet. The following color palette should be used:
 color_palette = my_palette5blue
