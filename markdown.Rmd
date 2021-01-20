@@ -2072,6 +2072,9 @@ ft_out
 
 #### Algemene opvattingen over het coronavirus naar gebruikersstatus
 Chi kwadraat toetsen zijn uitgevoerd om te bepalen of het totaal aandeel respondenten die denkt dat de stelling waar is (*zeker waar* en *misschien waar*) verschilt tussen de huidige gebruikers en degenen die de CoronaMelder nooit gebruikt hebben. Daarnaast is gekeken of de subgroep die de CoronaMelder nooit gebruikt heeft en aangaf neutraal te zijn met betrekking tot toekomstig gebruik verschilt van de huidig gebruikers. 
+
+##### Complottheorieën naar gebruikersstatus
+
 ```{r chiconspiracy1usernonuser, echo=FALSE}
 # First calculate a proportion for the variable. 
 data$Beliefs_Conspiracy1_agree[data$Beliefs_Conspiracy1 == 'Zeker waar'| data$Beliefs_Conspiracy1 == 'Misschien waar'] <- "Totaal waar"
@@ -2221,6 +2224,8 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 
 ```
+
+##### Vertrouwen in de overheid naar gebruikersstatus
 
 ```{r chiPBeliefsTrustGovernmentusernonuser1, echo=FALSE}
 # First calculate a proportion for the variable. 
