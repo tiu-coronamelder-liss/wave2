@@ -491,7 +491,65 @@ ft_out
 ```
 
 ##### Waargenomen ernst en vatbaarheid over de tijd
+```{r McNemarHBMPsusself1overtime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$HBM_PSus_self1_agree_cw[(data_currentwave_wavemin1$HBM_PSus_self1_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_PSus_self1_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_PSus_self1_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$HBM_PSus_self1_agree_cw[(data_currentwave_wavemin1$HBM_PSus_self1_cw == 'Neutraal'| data_currentwave_wavemin1$HBM_PSus_self1_cw == 'Een beetje oneens'| data_currentwave_wavemin1$HBM_PSus_self1_cw == 'Oneens'| data_currentwave_wavemin1$HBM_PSus_self1_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
 
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$HBM_PSus_self1_agree_wmin1[(data_currentwave_wavemin1$HBM_PSus_self1_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_PSus_self1_wmin1 == 'Mee eens'| data_currentwave_wavemin1$HBM_PSus_self1_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$HBM_PSus_self1_agree_wmin1[(data_currentwave_wavemin1$HBM_PSus_self1_wmin1 == 'Neutraal'| data_currentwave_wavemin1$HBM_PSus_self1_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$HBM_PSus_self1_wmin1 == 'Oneens'| data_currentwave_wavemin1$HBM_PSus_self1_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$HBM_PSus_self1_agree_cw, data_currentwave_wavemin1$HBM_PSus_self1_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSus_self1_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSus_self1_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat men in de komende twee maanden risico loopt op besmetting met het coronavirus.
+
+```{r McNemarHBMPsusother2overtime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$HBM_PSus_other2_agree_cw[(data_currentwave_wavemin1$HBM_PSus_other2_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_PSus_other2_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_PSus_other2_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$HBM_PSus_other2_agree_cw[(data_currentwave_wavemin1$HBM_PSus_other2_cw == 'Neutraal'| data_currentwave_wavemin1$HBM_PSus_other2_cw == 'Een beetje oneens'| data_currentwave_wavemin1$HBM_PSus_other2_cw == 'Oneens'| data_currentwave_wavemin1$HBM_PSus_other2_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$HBM_PSus_other2_agree_wmin1[(data_currentwave_wavemin1$HBM_PSus_other2_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_PSus_other2_wmin1 == 'Mee eens'| data_currentwave_wavemin1$HBM_PSus_other2_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$HBM_PSus_other2_agree_wmin1[(data_currentwave_wavemin1$HBM_PSus_other2_wmin1 == 'Neutraal'| data_currentwave_wavemin1$HBM_PSus_other2_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$HBM_PSus_other2_wmin1 == 'Oneens'| data_currentwave_wavemin1$HBM_PSus_other2_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$HBM_PSus_other2_agree_cw, data_currentwave_wavemin1$HBM_PSus_other2_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSus_other2_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSus_other2_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat de kans groot is dat men anderen zal besmetten, wanneer men zelf besmet is.
+
+```{r McNemarHBMPsevself1overtime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$HBM_PSev_self1_agree_cw[(data_currentwave_wavemin1$HBM_PSev_self1_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_PSev_self1_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_PSev_self1_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$HBM_PSev_self1_agree_cw[(data_currentwave_wavemin1$HBM_PSev_self1_cw == 'Neutraal'| data_currentwave_wavemin1$HBM_PSev_self1_cw == 'Een beetje oneens'| data_currentwave_wavemin1$HBM_PSev_self1_cw == 'Oneens'| data_currentwave_wavemin1$HBM_PSev_self1_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$HBM_PSev_self1_agree_wmin1[(data_currentwave_wavemin1$HBM_PSev_self1_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_PSev_self1_wmin1 == 'Mee eens'| data_currentwave_wavemin1$HBM_PSev_self1_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$HBM_PSev_self1_agree_wmin1[(data_currentwave_wavemin1$HBM_PSev_self1_wmin1 == 'Neutraal'| data_currentwave_wavemin1$HBM_PSev_self1_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$HBM_PSev_self1_wmin1 == 'Oneens'| data_currentwave_wavemin1$HBM_PSev_self1_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$HBM_PSev_self1_agree_cw, data_currentwave_wavemin1$HBM_PSev_self1_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSev_self1_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSev_self1_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het erg is om besmet te raken met het coronavirus.
+
+```{r McNemarHBMPsevother2overtime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$HBM_PSev_other2_agree_cw[(data_currentwave_wavemin1$HBM_PSev_other2_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_PSev_other2_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_PSev_other2_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$HBM_PSev_other2_agree_cw[(data_currentwave_wavemin1$HBM_PSev_other2_cw == 'Neutraal'| data_currentwave_wavemin1$HBM_PSev_other2_cw == 'Een beetje oneens'| data_currentwave_wavemin1$HBM_PSev_other2_cw == 'Oneens'| data_currentwave_wavemin1$HBM_PSev_other2_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$HBM_PSev_other2_agree_wmin1[(data_currentwave_wavemin1$HBM_PSev_other2_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_PSev_other2_wmin1 == 'Mee eens'| data_currentwave_wavemin1$HBM_PSev_other2_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$HBM_PSev_other2_agree_wmin1[(data_currentwave_wavemin1$HBM_PSev_other2_wmin1 == 'Neutraal'| data_currentwave_wavemin1$HBM_PSev_other2_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$HBM_PSev_other2_wmin1 == 'Oneens'| data_currentwave_wavemin1$HBM_PSev_other2_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$HBM_PSev_other2_agree_cw, data_currentwave_wavemin1$HBM_PSev_other2_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSev_other2_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSev_other2_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het erg is om anderen te besmetten met het coronavirus.
 
 ```{r, echo=FALSE, fig.width=5.5, fig.height=4, dpi = 300, fig.cap="Waargenomen ernst en vatbaarheid over de tijd, totaal percentage dat minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
 
@@ -791,6 +849,51 @@ ft_out
 ```
 
 ##### Naleven algemene gedragsregels over de tijd
+
+```{r McNemarBehaviorAdherenceGeneralMeasureshandwashingovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_agree_cw[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_cw == 'Altijd'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_cw == 'Meestal'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_cw == 'Vaak')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_agree_cw[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_cw == 'Regelmatig'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_cw == 'Soms'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_cw == 'Zelden'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_cw == 'Nooit')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_agree_wmin1[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_wmin1 == 'Altijd'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_wmin1 == 'Meestal'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_wmin1 == 'Vaak')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_agree_wmin1[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_wmin1 == 'Regelmatig'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_wmin1 == 'Soms'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_wmin1 == 'Zelden'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_wmin1 == 'Nooit')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_agree_cw, data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_handwashing_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Behavior_AdherenceGeneralMeasures_handwashing_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Behavior_AdherenceGeneralMeasures_handwashing_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf altijd, meestal, of vaak de handen gewassen te hebben.
+```{r McNemarBehaviorAdherenceGeneralMeasuresdistanceovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_agree_cw[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_cw == 'Altijd'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_cw == 'Meestal'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_cw == 'Vaak')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_agree_cw[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_cw == 'Regelmatig'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_cw == 'Soms'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_cw == 'Zelden'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_cw == 'Nooit')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_agree_wmin1[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_wmin1 == 'Altijd'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_wmin1 == 'Meestal'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_wmin1 == 'Vaak')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_agree_wmin1[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_wmin1 == 'Regelmatig'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_wmin1 == 'Soms'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_wmin1 == 'Zelden'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_wmin1 == 'Nooit')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_agree_cw, data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_distance_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Behavior_AdherenceGeneralMeasures_distance_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Behavior_AdherenceGeneralMeasures_distance_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf altijd, meestal, of vaak op minder dan 1,5m afstand geweest te zijn van mensen buiten het huishouden.
+
+```{r McNemarBehaviorAdherenceGeneralMeasuresavoidbusyplacesovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_agree_cw[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Altijd'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Meestal'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Vaak')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_agree_cw[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Regelmatig'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Soms'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Zelden'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Nooit')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_agree_wmin1[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Altijd'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Meestal'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Vaak')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_agree_wmin1[(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Regelmatig'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Soms'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Zelden'| data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Nooit')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_agree_cw, data_currentwave_wavemin1$Behavior_AdherenceGeneralMeasures_avoidbusyplaces_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Behavior_AdherenceGeneralMeasures_avoidbusyplaces_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Behavior_AdherenceGeneralMeasures_avoidbusyplaces_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf altijd, meestal, of vaak op een plek geweest te zijn waar het eigenlijk te druk was om 1,5m afstand te houden.
+
 ```{r, echo=FALSE, fig.width=5.5, fig.height=3.5, dpi = 300, fig.cap="Naleven algemene gedragsregels over de tijd, totaal percentage dat vaak, meestal, of altijd het gedrag heeft uitgevoerd."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
@@ -1024,6 +1127,65 @@ ft_out
 ```
 
 ##### Intentie tot naleving algemene gedragsregels over de tijd
+
+```{r McIntentionAdherenceGeneralMeasureshandwashingovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_agree_cw[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_cw == 'Mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_agree_cw[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_cw == 'Neutraal'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_cw == 'Een beetje oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_cw == 'Oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_agree_wmin1[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_agree_wmin1[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_wmin1 == 'Oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_agree_cw, data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_handwashing_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_AdherenceGeneralMeasures_handwashing_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_AdherenceGeneralMeasures_handwashing_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling van plan te zijn om de komende 2 maanden de handen regelmatig te wassen.
+```{r McIntentionAdherenceGeneralMeasureshanddistanceovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_agree_cw[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_cw == 'Mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_agree_cw[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_cw == 'Neutraal'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_cw == 'Een beetje oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_cw == 'Oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_agree_wmin1[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_agree_wmin1[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_wmin1 == 'Oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_agree_cw, data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_distance_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_AdherenceGeneralMeasures_distance_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_AdherenceGeneralMeasures_distance_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling van plan te zijn om de komende 2 maanden 1,5 meter afstand te houden van mensen buiten het huishouden. 
+```{r McIntentionAdherenceGeneralMeasuresavoidbusyplacesovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_agree_cw[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_agree_cw[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Neutraal'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Een beetje oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_agree_wmin1[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_agree_wmin1[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_agree_cw, data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_avoidbusyplaces_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_AdherenceGeneralMeasures_avoidbusyplaces_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_AdherenceGeneralMeasures_avoidbusyplaces_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling van plan te zijn om de komende 2 maanden drukke plekken te vermijden.
+```{r McIntentionAdherenceGeneralMeasuresquarantineovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_agree_cw[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_cw == 'Mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_agree_cw[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_cw == 'Neutraal'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_cw == 'Een beetje oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_cw == 'Oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_agree_wmin1[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_wmin1 == 'Mee eens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_agree_wmin1[(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_wmin1 == 'Neutraal'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_wmin1 == 'Oneens'| data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_agree_cw, data_currentwave_wavemin1$Intention_AdherenceGeneralMeasures_quarantaine_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_AdherenceGeneralMeasures_quarantaine_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Intention_AdherenceGeneralMeasures_quarantaine_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling van plan te zijn om de komende 2 maanden thuis te blijven als men klachten heeft die passen bij het coronavirus. 
+
+
 ```{r, echo=FALSE, fig.width=5.5, fig.height=4.0, dpi = 300, fig.cap="Intentie tot naleving algemene gedragsregels over de tijd, totaal percentage dat minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
@@ -1208,6 +1370,35 @@ ft_out
 ```
 
 ##### Complottheorieën over de tijd
+```{r chiBeliefsconspiracy1overtime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Beliefs_Conspiracy1_agree_cw[(data_currentwave_wavemin1$Beliefs_Conspiracy1_cw == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_Conspiracy1_cw == 'Misschien waar')] <- "Totaal waar_cw"
+data_currentwave_wavemin1$Beliefs_Conspiracy1_agree_cw[(data_currentwave_wavemin1$Beliefs_Conspiracy1_cw == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_Conspiracy1_cw == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_Conspiracy1_cw == 'Misschien niet waar')] <- "Weet niet, niet waar_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Beliefs_Conspiracy1_agree_wmin1[(data_currentwave_wavemin1$Beliefs_Conspiracy1_wmin1 == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_Conspiracy1_wmin1 == 'Misschien waar')] <- "Totaal waar_wmin1"
+data_currentwave_wavemin1$Beliefs_Conspiracy1_agree_wmin1[(data_currentwave_wavemin1$Beliefs_Conspiracy1_wmin1 == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_Conspiracy1_wmin1 == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_Conspiracy1_wmin1 == 'Misschien niet waar')] <- "Weet niet, niet waar_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Beliefs_Conspiracy1_agree_cw, data_currentwave_wavemin1$Beliefs_Conspiracy1_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table) 
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_Conspiracy1_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_Conspiracy1_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat het coronavirus een biologisch wapen is dat in een laboratorium is gemaakt, waar is. 
+```{r chiBeliefsconspiracy2overtime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$Beliefs_Conspiracy2_agree_cw[(data_currentwave_wavemin1$Beliefs_Conspiracy2_cw == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_Conspiracy2_cw == 'Misschien waar')] <- "Totaal waar_cw"
+data_currentwave_wavemin1$Beliefs_Conspiracy2_agree_cw[(data_currentwave_wavemin1$Beliefs_Conspiracy2_cw == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_Conspiracy2_cw == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_Conspiracy2_cw == 'Misschien niet waar')] <- "Weet niet, niet waar_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$Beliefs_Conspiracy2_agree_wmin1[(data_currentwave_wavemin1$Beliefs_Conspiracy2_wmin1 == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_Conspiracy2_wmin1 == 'Misschien waar')] <- "Totaal waar_wmin1"
+data_currentwave_wavemin1$Beliefs_Conspiracy2_agree_wmin1[(data_currentwave_wavemin1$Beliefs_Conspiracy2_wmin1 == 'Weet ik niet'| data_currentwave_wavemin1$Beliefs_Conspiracy2_wmin1 == 'Zeker niet waar'| data_currentwave_wavemin1$Beliefs_Conspiracy2_wmin1 == 'Misschien niet waar')] <- "Weet niet, niet waar_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$Beliefs_Conspiracy2_agree_cw, data_currentwave_wavemin1$Beliefs_Conspiracy2_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table) 
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_Conspiracy2_agree_cw == 'Totaal waar_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (Beliefs_Conspiracy2_agree_wmin1 == 'Totaal waar_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf dat de stelling dat de uitbraak van het coronavirus te maken heeft met (de aanleg van) het 5G netwerk, waar is. 
+
 ```{r, echo=FALSE, fig.width=5.5, fig.height=3.0, dpi = 300, fig.cap="Complottheorieën over de tijd, totaal percentage waar (misschien waar, zeker waar)."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
@@ -1798,6 +1989,36 @@ ft_out
 
 
 ### Intentie tot (blijvend) gebruik CoronaMelder over de tijd
+```{r McNemarBI1aUtautovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$BI1a_UTAUT_agree_cw[(data_currentwave_wavemin1$BI1a_UTAUT_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$BI1a_UTAUT_cw == 'Mee eens'| data_currentwave_wavemin1$BI1a_UTAUT_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$BI1a_UTAUT_agree_cw[(data_currentwave_wavemin1$BI1a_UTAUT_cw == 'Neutraal'| data_currentwave_wavemin1$BI1a_UTAUT_cw == 'Een beetje oneens'| data_currentwave_wavemin1$BI1a_UTAUT_cw == 'Oneens'| data_currentwave_wavemin1$BI1a_UTAUT_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$BI1a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Mee eens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$BI1a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Neutraal'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Oneens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$BI1a_UTAUT_agree_cw, data_currentwave_wavemin1$BI1a_UTAUT_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (BI1a_UTAUT_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (BI1a_UTAUT_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf van plan te zijn de CoronaMelder in de komende 2 maanden te gebruiken.
+```{r McNemarBI2aUtautovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$BI2a_UTAUT_agree_cw[(data_currentwave_wavemin1$BI2a_UTAUT_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$BI2a_UTAUT_cw == 'Mee eens'| data_currentwave_wavemin1$BI2a_UTAUT_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$BI2a_UTAUT_agree_cw[(data_currentwave_wavemin1$BI2a_UTAUT_cw == 'Neutraal'| data_currentwave_wavemin1$BI2a_UTAUT_cw == 'Een beetje oneens'| data_currentwave_wavemin1$BI2a_UTAUT_cw == 'Oneens'| data_currentwave_wavemin1$BI2a_UTAUT_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$BI2a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$BI2a_UTAUT_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$BI2a_UTAUT_wmin1 == 'Mee eens'| data_currentwave_wavemin1$BI2a_UTAUT_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$BI2a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$BI2a_UTAUT_wmin1 == 'Neutraal'| data_currentwave_wavemin1$BI2a_UTAUT_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$BI2a_UTAUT_wmin1 == 'Oneens'| data_currentwave_wavemin1$BI2a_UTAUT_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# Convert into a table that can be used for the chi square test
+mcnemar.table = table(data_currentwave_wavemin1$BI2a_UTAUT_agree_cw, data_currentwave_wavemin1$BI2a_UTAUT_agree_wmin1)
+mcnemartest = mcnemar.test(mcnemar.table)
+```
+De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (BI2a_UTAUT_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (BI2a_UTAUT_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het waarschijnlijk is dat men de CoronaMelder in de komende 2 maanden zal gebruiken.
+
+
 ```{r, echo=FALSE, fig.width=5.5, fig.height=3.0, dpi = 300, fig.cap="Intentie tot gebruik bij respondenten die de CoronaMelder op dit moment niet gebruiken, totaal percentage dat minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
@@ -4902,7 +5123,7 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
-#### Verwachte gebruiksvriendelijkheid, inspanningsverwachting en zelfeffectiviteit over tijd
+#### Verwachte gebruiksvriendelijkheid, inspanningsverwachting en zelfeffectiviteit over de tijd
 ```{r McNemarselfefficacyCMovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_agree_cw[(data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -5238,7 +5459,7 @@ ft_out
 
 ```
 
-#### Technologie gerelateerde belemmeringen over tijd
+#### Technologie gerelateerde belemmeringen over de tijd
 ```{r McNemarFC1utautovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$FC1_UTAUT_agree_cw[(data_currentwave_wavemin1$FC1_UTAUT_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$FC1_UTAUT_cw == 'Mee eens'| data_currentwave_wavemin1$FC1_UTAUT_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -5594,7 +5815,7 @@ ft_out
 
 ```
 
-#### Persoonlijke voor- en nadelen van gebruik over tijd
+#### Persoonlijke voor- en nadelen van gebruik over de tijd
 ```{r McNemarHBMperceivedbenefitsCoronaMelderutautovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_agree_cw[(data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_perceivedbenefits_CoronaMelder_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -6017,7 +6238,7 @@ ft_out
 
 ```
 
-#### Verplichting tot gebruik over tijd
+#### Verplichting tot gebruik over de tijd
 ```{r McNemarBeliefsvoluntarinesovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$Beliefs_voluntariness_agree_cw[(data_currentwave_wavemin1$Beliefs_voluntariness_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_voluntariness_cw == 'Mee eens'| data_currentwave_wavemin1$Beliefs_voluntariness_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -6356,7 +6577,7 @@ ft_out
 ```
 
 
-#### Affectieve reakties over tijd
+#### Affectieve reakties over de tijd
 ```{r McNemarBeliefs_fearovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$Beliefs_fear_agree_cw[(data_currentwave_wavemin1$Beliefs_fear_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$Beliefs_fear_cw == 'Mee eens'| data_currentwave_wavemin1$Beliefs_fear_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -6848,7 +7069,7 @@ testtable = table(data$SI1_UTAUT_agree, data$user_status)
 ```
 
 
-#### Sociale invloeden over tijd
+#### Sociale invloeden over de tijd
 
 ```{r McNemarSI1utautovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
@@ -7327,7 +7548,7 @@ ft_out
 
 ```
 
-#### Privacy en dataveiligheid over tijd
+#### Privacy en dataveiligheid over de tijd
 ```{r McNemarBeliefsdatasafetyovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$Beliefs_datasafety_agree_cw[(data_currentwave_wavemin1$Beliefs_datasafety_cw == 'Zeker waar'| data_currentwave_wavemin1$Beliefs_datasafety_cw == 'Misschien waar')] <- "Totaal waar_cw"
@@ -8042,7 +8263,7 @@ ft_out
 
 ```
 
-###### Zelfeffectiviteit opvolging adviezen over tijd
+###### Zelfeffectiviteit opvolging adviezen over de tijd
 ```{r McNemaradherencenotificationsselfefficacyovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$HBM_selfefficacy_Test_agree_cw[(data_currentwave_wavemin1$HBM_selfefficacy_Test_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_Test_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_Test_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -8385,7 +8606,7 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
-###### Gepercipieerde persoonlijke voordelen van opvolgen adviezen over tijd
+###### Gepercipieerde persoonlijke voordelen van opvolgen adviezen over de tijd
 ```{r McNemarHBMbenefitstestovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$HBM_perceivedbenefits_Test_agree_cw[(data_currentwave_wavemin1$HBM_perceivedbenefits_Test_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_perceivedbenefits_Test_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_perceivedbenefits_Test_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -8503,7 +8724,7 @@ ggdraw(aligned[[2]])
 
 ```
 
-###### Gepercipieerde persoonlijke nadelen van opvolgen adviezen over tijd
+###### Gepercipieerde persoonlijke nadelen van opvolgen adviezen over de tijd
 ```{r McNemarHBMbarrierstestovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$HBM_barriers_Test_agree_cw[(data_currentwave_wavemin1$HBM_barriers_Test_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_barriers_Test_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_barriers_Test_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -8959,7 +9180,7 @@ ft_out
 ```
 
 
-#### Intentie tot doorgeven GGD-sleutel na positieve test over tijd
+#### Intentie tot doorgeven GGD-sleutel na positieve test over de tijd
 ``` {r McNemarsharekeyovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$Intention_reportinfection_agree_cw[(data_currentwave_wavemin1$Intention_reportinfection_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$Intention_reportinfection_cw == 'Mee eens'| data_currentwave_wavemin1$Intention_reportinfection_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
