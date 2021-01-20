@@ -232,7 +232,7 @@ data_allwaves = merge(data_wave1, data_wave2, by = "nomem_encr", all = FALSE, su
 De CoronaMelder app is ontwikkeld door het ministerie van Volksgezondheid, Welzijn en Sport en wordt nu landelijk gebruikt in de strijd tegen het coronavirus. Het doel van dit onderzoek is om de adoptie van de app en de (intentie tot) opvolging van de in de app gegeven adviezen te onderzoeken en te verklaren.  
 
 ## Methode {.unlisted .unnumbered}
-In het kader van de evaluatie van de CoronaMelder wordt er een longitudinaal vragenlijstonderzoek uitgevoerd via het LISS panel. De datacollectie (wave 2) van deze rapportage vond plaats tussen 7 december en 20 december 2020, 2 maanden week na de landelijke lancering op 10 oktober 2020. Aan dit onderzoek hebben `r nrow(data)` (gemiddelde leeftijd in jaren: `r round(mean(data$leeftijd), digits = 1)`, standaarddeviatie: `r round(sd(data$leeftijd), digits = 1)`; `r round((nrow(filter(data, geslacht == 'Vrouw'))/nrow(data))*100, digits = 2)`% vrouw) respondenten deelgenomen.   
+In het kader van de evaluatie van de CoronaMelder wordt er een longitudinaal vragenlijstonderzoek uitgevoerd via het LISS panel. De datacollectie (wave 2) van deze rapportage vond plaats tussen 7 en 20 december 2020, 2 maanden week na de landelijke lancering op 10 oktober 2020. Aan dit onderzoek hebben `r nrow(data)` (gemiddelde leeftijd in jaren: `r round(mean(data$leeftijd), digits = 1)`, standaarddeviatie: `r round(sd(data$leeftijd), digits = 1)`; `r round((nrow(filter(data, geslacht == 'Vrouw'))/nrow(data))*100, digits = 2)`% vrouw) respondenten deelgenomen.   
 
 ## Resultaten en aanbevelingen{.unlisted .unnumbered}  
 
@@ -259,15 +259,15 @@ De CoronaMelder app is ontwikkeld door het ministerie van Volksgezondheid, Welzi
 
 ## Onderzoeksopzet  
 
-In het kader van de evaluatie van de CoronaMelder wordt er een longitudinaal vragenlijstonderzoek uitgevoerd via het LISS panel (LISSdata.nl) waarbij er over een periode van 5 maanden 4 metingen zullen plaatsvinden. Het doel van dit onderzoek is om, over de tijd, de adoptie van de app en de (intentie tot) opvolging van de in de app gegeven adviezen te onderzoeken en te verklaren. Meer specifiek gaan we in dit longitudinale onderzoek in op de volgende onderzoeksvragen:
+In het kader van de evaluatie van de CoronaMelder wordt er een longitudinaal vragenlijstonderzoek uitgevoerd via het LISS panel (LISSdata.nl) waarbij er over een periode van 5 maanden 4 metingen plaatsvinden. Het doel van dit onderzoek is om, over de tijd, de adoptie van de app en de (intentie tot) opvolging van de in de app gegeven adviezen te onderzoeken en te verklaren. Meer specifiek gaan we in dit longitudinale onderzoek in op de volgende onderzoeksvragen:
   
 Onderzoeksvraag 1: Wat is de temporele dynamiek van de adoptie van digitale contracttracering in de Nederlandse bevolking en welke factoren (persoonlijk, sociaal, omgevingsfactoren) hebben hierop betrekking? 
   
 Onderzoeksvraag 2: Wat is de temporele dynamiek van de intentie om zich te houden aan de adviezen die worden gecommuniceerd in de digitale contacttracing app CoronaMelder en welke factoren (persoonlijk, sociaal, omgeving, app-gerelateerd) zijn hierop van invloed? 
 
-De huidige rapportage beslaat de data van de eerste meting. Hierdoor zijn effecten alleen voor de eerste wave getoond. Effecten over de tijd zullen in volgende rapportages getoond worden. De datacollectie (wave 2) van deze rapportage vond plaats tussen 7 december en 20 december 2020, 1.5 maand na de landelijke lancering op 10 oktober 2020. Vervolgmetingen vinden plaats 3 maanden na lancering (18-01 t/m 31-01) en 5 maanden na lancering (15-03 t/m 29-03). 
+De huidige rapportage beslaat de data van de tweede meting. Ook wordt een vergelijking met de eerste meting getoond. De datacollectie (wave 2) van deze rapportage vond plaats tussen 7 december en 20 december 2020, 2 maand na de landelijke lancering op 10 oktober 2020. Vervolgmetingen vinden plaats 3 maanden na lancering (18-01 t/m 31-01) en 5 maanden na lancering (15-03 t/m 29-03). 
 
-De (9 minuten durende) vragenlijst bevat op elk meetmoment de volgende onderwerpen:   
+De (8 minuten durende) vragenlijst bevat op elk meetmoment de volgende onderwerpen:   
 - Gebruiksgedrag van CoronaMelder  
 - Technologische factoren die zijn afgeleid van de Unified Theory of Acceptance and Use of Techology (UTAUT): prestatieverwachting, inspanningsverwachting, sociale invloed en gedragsintentie. 
 - COVID-19 en CoronaMelder-gerelateerde percepties en overtuigingen  
@@ -276,7 +276,7 @@ De (9 minuten durende) vragenlijst bevat op elk meetmoment de volgende onderwerp
 - Persoonlijke, sociale en omgevingsfactoren   
 - Preventief gedrag / naleving van adviezen en factoren die zijn afgeleid van het Health Belief Model (HBM): Preventief gedrag (afgelopen week en intentie), waargenomen ernst en vatbaarheid, persoonlijke voordelen en barrières, zelfredzaamheid  
 
-Sommige items zijn aan verandering onderhevig (bijvoorbeeld items over misvattingen over de app of het coronavirus zullen gebaseerd zijn op de meest recente ontwikkelingen en actuele gebeurtenissen in de media). In de bijlage kan de vragenlijst van wave 1 gevonden worden. 
+Sommige items zijn aan verandering onderhevig (bijvoorbeeld items over misvattingen over de app of het coronavirus zullen gebaseerd zijn op de meest recente ontwikkelingen en actuele gebeurtenissen in de media). In de bijlage kan de vragenlijst van wave 2 gevonden worden. 
 
 ## Beschrijving panel
 Het LISS panel is bij uitstek geschikt voor onderzoek waarbij een goede vertegenwoordiging van de Nederlandse bevolking van groot belang is. Het LISS panel is een probability-based (geen zelfselectie) panel dat iedere maand vragenlijsten invullen via internet. De adressensteekproeven voor de werving en de bijwervingen zijn getrokken uit het populatieregister in samenwerking met het CBS. Indien een huishouden niet beschikt over een breedbandverbinding en/of computer, dan stelt CentERdata de benodigde apparatuur in bruikleen beschikbaar om alsnog mee te kunnen doen aan het panel. Hiermee onderscheidt het LISS panel zich van andere online panels, waar niet-internetters ontbreken en waar panelleden de gelegenheid hebben om zichzelf aan te melden.  
@@ -287,9 +287,12 @@ Panelleden ontvangen € 7,50 voor een vragenlijst met een invultijd van dertig 
 
 Datum van dataverzameling: 7 december 2020 – 20 december 2020.
 
-Steekproef meting 1: Een aselecte steekproef van LISS-panelleden van 16 jaar en ouder die ook de LISS-kernvragenlijst ‘Health’ (afgenomen in november en december 2019) en de vragenlijst over het coronavirus (afgenomen in het LISS panel maart 2020) hebben ingevuld.  
+Voor de tweede meting zijn alle deelnemers uit de eerste meting uitgenodigd die de vragenlijst van de eerste meting volledig hadden ingevuld. 
 
-Responsoverzicht | 
+Ter achtergrondinformatie: de steekproef van meting 1 was een aselecte steekproef van LISS-panelleden van 16 jaar en ouder die ook de LISS-kernvragenlijst ‘Health’ (afgenomen in november en december 2019) en de vragenlijst over het coronavirus (afgenomen in het LISS panel maart 2020) hebben ingevuld.  
+
+
+Responsoverzicht wave 2| 
 ------------- | -------------
 Respondenten wave 1: | 1.895 (100,0%)  
 Nonrespons | 287 (15,1%)  
@@ -8957,7 +8960,7 @@ pairwiseNominalIndependence(Matriz,
 
 # Bijlagen
 Als bijlage kunt u bij dit rapport vinden:  
-- Vragenlijst wave 1  
+- Vragenlijst wave 2  
 - Vergelijking demografie sample huidig onderzoek, LISS core panel en CBS  
 
 
