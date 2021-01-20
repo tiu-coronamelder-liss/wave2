@@ -302,6 +302,14 @@ Respons | 1.608 (84,9%)
 
 In de resultaten sectie worden de uitkomsten getoond van de 1594 respondenten waarvan de data compleet was. Ook wordt er een overzicht van de karakteristieken van de steekproef getoond. In de bijlage kan een vergelijking van de demografische samenstelling van de steekproef in vergelijking met die van de Nederlandse bevolking (op basis van gegevens van het CBS) gevonden worden. 
 
+## Vergelijkingen naar gebruikersstatus en over de tijd
+
+Voor de meeste onderwerpen zijn de resultaten uitgesplitst naar gebruikersstatus en is een vergelijking over de tijd getoond. 
+
+Voor de uitsplitsing naar gebruikersstatus werd een respondent aangemerkt als *gebruiker* indien deze op de vraag 'Welke situatie geldt voor u?' het antwoord 'Ik gebruik de CoronaMelder app op dit moment' had gegeven. Iemand is aangemerkt als *Niet gebruiker* indien de respondent op deze vraag het antwoord 'Ik heb de CoronaMelder app nooit gebruikt' had gegeven. Niet gebruikers die aangaven het in meer of mindere mate *oneens* te zijn met de stelling 'Ik ben van plan de CoronaMelder in de komende 2 maanden te gebruiken' werden aangemerkt als *Niet gebruiker - niet van plan om te gaan gebruiken*. Niet gebruikers die aangaven het in meer of mindere mate *eens* te zijn met de stelling 'Ik ben van plan de CoronaMelder in de komende 2 maanden te gebruiken' werden aangemerkt als *Niet gebruiker - wel van plan om te gaan gebruiken*. Niet gebruikers die *neutraal* antwoorden op de stelling 'Ik ben van plan de CoronaMelder in de komende 2 maanden te gebruiken' werden aangemerkt als *Niet gebruiker - neutraal*. Chi kwadraat toetsen zijn uitgevoerd om te bepalen of het totaal aandeel respondenten dat het eens (een beetje, eens, helemaal mee eens) is met de verschillende stellingen verschilt tussen de huidige gebruikers en degenen die de CoronaMelder nooit gebruikt hebben. Daarnaast is gekeken of de subgroep die de CoronaMelder nooit gebruikt heeft en aangaf neutraal te zijn met betrekking tot toekomstig gebruik verschilt van de huidig gebruikers.
+
+Voor de vergelijkingen over tijd is een McNemar chi kwadraattoets uitgevoerd om te toetsen of het totaal aandeel respondenten dat het eens (een beetje, eens, helemaal mee eens) is met de verschillende stellingen verschilt tussen de huidige en de vorige meting. Bij deze toetsen en in de bijbehorende grafieken zijn alleen de respondenten meegnomen die zowel de huidige als de vorige vragenlijst volledig hebben ingevuld. Daarom kan het zijn dat percentages eens die in dit rapport worden getoond voor de vorige wave afwijken van de percentages die gepresenteerd werden in de vorige rapportage. 
+
 ```{=openxml}
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
 ```
