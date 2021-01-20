@@ -3458,7 +3458,7 @@ ggdraw(aligned[[2]])
 
 
 ### CoronaMelder in de media
-Er is gekeken of men gemerkt heeft dat de CoronaMelder in de media voorbij is gekomen, en wat de toon van deze berichten was. In totaal gaf `r round((nrow(filter(data, (Media == 'Vaak'| Media == 'Soms'| Media == 'Af en toe'))) /nrow(data))*100, digits = 1)`% aan dat de CoronaMelder minstens af en toe in de media voorbij was gekomen.  
+Er is gekeken of men gemerkt heeft dat de CoronaMelder in de media en/of het nieuws voorbij is gekomen, en wat de toon van deze berichten was. In totaal gaf `r round((nrow(filter(data, (Media == 'Vaak'| Media == 'Soms'| Media == 'Af en toe'))) /nrow(data))*100, digits = 1)`% aan dat de CoronaMelder af en toe, soms of vaak in de media en/of het nieuws voorbij was gekomen. 
 
 ```{r, echo=FALSE, fig.width=7, fig.height=2, fig.cap="CoronaMelder in de media", tab.cap="CoronaMelder in de media"}
 
@@ -3571,7 +3571,7 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
-Daarnaast is ook gevraagd naar de toon van de berichtgeving over de CoronaMelder. Hierbij gaf `r round((nrow(filter(data, (MediaValence == 'Heel erg positief'| MediaValence == 'Positief'| MediaValence == 'Een beetje positief'))) /nrow(data))*100, digits = 1)`% aan dat deze berichten in de media over het algemeen positief van toon waren.
+Daarnaast is aan de respondenten (`r nrow(filter(data, (Media == 'Vaak'| Media == 'Soms'| Media == 'Af en toe')))`) die de in voorgaande vraag aangaven de CoronaMelder af en toe, soms of vaak voorbij te hebben zien gekomen in de media en/of nieuws ook gevraagd naar de toon van de berichtgeving over de CoronaMelder. Hierbij gaf `r round((nrow(filter(data, (MediaValence == 'Heel erg positief'| MediaValence == 'Positief'| MediaValence == 'Een beetje positief'))) /nrow(filter(data, (Media == 'Vaak'| Media == 'Soms'| Media == 'Af en toe'))))*100, digits = 1)`% aan dat deze berichten in de media over het algemeen positief van toon waren.
 
 ```{r, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Toon van mediaberichten over de CoronaMelder", tab.cap="Toon van mediaberichten over de CoronaMelder"}
 
