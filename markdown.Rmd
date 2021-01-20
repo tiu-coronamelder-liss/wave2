@@ -113,6 +113,9 @@ attr(data$burgstat_simplified,'label')  <- 'Burgerlijke staat'
 attr(data$woonvorm,'label')  <- 'Woonvorm huishouden'
 attr(data$Riskgroup_contact,'label')  <- 'Frequentie op minder dan 1.5m van ouderen en mensen met een kwetsbare gezondheid zijn vanwege werk en/of (privé) zorgtaken'
 
+### Rename unclear levels (this is the LISS category label but only 17 and older are included in current sample)
+levels(data$lftdcat)[levels(data$lftdcat)=="15 - 24 jaar"] <- "17 - 24 jaar"
+
 ##### Creating new variables
 ### User status. 
 # Of interest is the comparison of current users and current non users.  
@@ -151,7 +154,10 @@ attr(data_currentvsneveruser$burgstat_simplified,'label')  <- 'Burgerlijke staat
 attr(data_currentvsneveruser$woonvorm,'label')  <- 'Woonvorm huishouden'
 attr(data_currentvsneveruser$Riskgroup_contact,'label')  <- 'Frequentie op minder dan 1.5m van ouderen en mensen met een kwetsbare gezondheid zijn vanwege werk en/of (privé) zorgtaken'
 
-### Create a dataset with only the curent users and never users that are neutral on intention for all analyses in which these groups are compared. 
+# Rename unclear levels (this is the LISS category label but only 17 and older are included in current sample)
+levels(data_currentvsneveruser$lftdcat)[levels(data_currentvsneveruser$lftdcat)=="15 - 24 jaar"] <- "17 - 24 jaar"
+
+### Create a dataset with only the current users and never users that are neutral on intention for all analyses in which these groups are compared. 
 data_currentvsneveruserneutral = data[ which(data$user_status_intention=='Gebruiker' | data$user_status_intention=='Nooit gebruikt en neutraal'), ]
 # Drop unused levels
 data_currentvsneveruserneutral$user_status_intention = droplevels(data_currentvsneveruserneutral$user_status_intention)
