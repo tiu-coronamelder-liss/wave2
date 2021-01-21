@@ -2,10 +2,10 @@
 * This script produces output to check the data and outcomes in the report. 
 * Open data.
 GET
-  FILE='L_CoronaMelder_wave1_3p.sav'.
+  FILE='L_Corona_app_wave2_3p.sav'.
 DATASET NAME DataSet2 WINDOW=FRONT.
 
-* Remove the 10 participants for which data was not complete.
+* Remove the participants for which data was not complete.1608 rows in the dataset. 14 had missings. 1594 completes. 
 USE ALL.
 COMPUTE filter_$=( ~ SYSMIS(duur)).
 VARIABLE LABELS filter_$ ' ~ SYSMIS(duur) (FILTER)'.

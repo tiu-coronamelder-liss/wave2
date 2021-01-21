@@ -294,7 +294,7 @@ Ter achtergrondinformatie: de steekproef van meting 1 was een aselecte steekproe
 
 Responsoverzicht wave 2| 
 ------------- | -------------
-Respondenten wave 1: | 1.895 (100,0%)  
+Respondenten uitgenodigd voor deelname: | 1.895 (100,0%)  
 Nonrespons | 287 (15,1%)  
 Respons | 1.608 (84,9%)  
   Compleet | 1.594 (84,1%)  
@@ -317,7 +317,7 @@ Voor de vergelijkingen over tijd is een McNemar chi kwadraattoets uitgevoerd om 
 # Resultaten
 ## Karakteristieken van de steekproef
 ### Demografische factoren
-Aan dit onderzoek hebben `r nrow(data)` (gemiddelde leeftijd in jaren: `r round(mean(data$leeftijd), digits = 1)`, standaarddeviatie: `r round(sd(data$leeftijd), digits = 1)`, range: `r min(data$leeftijd)`-`r max(data$leeftijd)`; `r round((nrow(filter(data, geslacht == 'Vrouw'))/nrow(data))*100, digits = 2)`% vrouw) respondenten deelgenomen. De demografische kenmerken zijn te vinden in de onderstaande tabel. 
+Aan dit onderzoek hebben `r nrow(data)` (gemiddelde leeftijd in jaren: `r round(mean(data$leeftijd), digits = 1)`, standaarddeviatie: `r round(sd(data$leeftijd), digits = 1)`, range: `r min(data$leeftijd)`-`r max(data$leeftijd)`; `r round((nrow(filter(data, geslacht == 'Vrouw'))/nrow(data))*100, digits = 1)`% vrouw) respondenten deelgenomen. De demografische kenmerken zijn te vinden in de onderstaande tabel. 
 
 ```{r, echo=FALSE, results="asis"} 
 tab.noby <- tableby(~ geslacht + lftdcat + sted_simplified + belbezig_simplified + oplmet_simplified + burgstat_simplified + nettocat_simplified + woonvorm + Riskgroup_contact, data=data)
