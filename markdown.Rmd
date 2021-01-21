@@ -1747,6 +1747,44 @@ ggdraw(aligned[[2]])
 ## Gebruik CoronaMelder
 Van alle respondenten gaf `r round(nrow(filter(data, Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment'))`) aan dat hij/zij de CoronaMelder op dit moment gebruikt en `r round(nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt'))`) geeft aan de CoronaMelder niet te gebruiken. Slechts `r round(nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app in het verleden wel gebruikt maar op dit moment niet meer'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app in het verleden wel gebruikt maar op dit moment niet meer'))`) gaf aan de CoronaMelder in het verleden gebruikt te hebben maar op dit moment niet meer. 
 
+### Open vraag: redenen om de CoronaMelder niet (meer) te gebruiken
+
+```{r echo = FALSE, eval = FALSE}
+## Clean up the text for analysis
+library(tm)
+# Select only those who used to use the CoronaMelder
+data_formerusers <- filter(data, Behavior_UTAUT == "Ik heb de CoronaMelder app in het verleden wel gebruikt maar op dit moment niet meer")
+data_formerusers_NoNA <- data_formerusers[complete.cases(data_formerusers$GeenGebruik_reden),]
+
+GeenGebruik.corpus <- Corpus(VectorSource (data_formerusers_NoNA$GeenGebruik_reden))
+GeenGebruik.corpus <- tm_map(GeenGebruik.corpus, stripWhitespace)
+GeenGebruik.corpus <- tm_map(GeenGebruik.corpus, content_transformer(tolower))
+GeenGebruik.corpus <- tm_map(GeenGebruik.corpus, removeWords, stopwords("dutch"))
+GeenGebruik.corpus <- tm_map(GeenGebruik.corpus, removeNumbers)
+GeenGebruik.corpus <- tm_map(GeenGebruik.corpus, removePunctuation)
+
+GeenGebruik.dtm <- TermDocumentMatrix(GeenGebruik.corpus, control = list(stopwords=TRUE,wordLengths = c(1,30)))
+findFreqTerms(GeenGebruik.dtm, lowfreq=10) ##Terms that appear 10 times
+
+# Counts for top words
+freqwrds <- sort (rowSums (as.matrix(GeenGebruik.dtm)),decreasing=TRUE)
+# Returns top 100 words
+melt(freqwrds [1:100])
+
+library(tidyverse)
+sums <- as.data.frame(colSums(as.matrix(GeenGebruik.dtm)))
+sums <- rownames_to_column(sums) 
+colnames(sums) <- c("term", "count")
+sums <- arrange(sums, desc(count))
+head <- sums[1:75,]
+library(wordcloud)
+
+#wordcloud(words = head$term, freq = head$count, min.freq = 3,
+#  max.words=100, random.order=FALSE, rot.per=0.35, 
+#  colors=brewer.pal(8, "Dark2"))
+
+```
+
 ## Intentie tot (blijvend) gebruik CoronaMelder
 Er werd gevraagd of de respondenten de intentie hadden om de CoronaMelder de komende twee maanden te (blijven) gebruiken. Van de respondenten die de CoronaMelder app nooit hebben gebruikt, gaf `r round((nrow(filter(data, (BI1a_UTAUT == 'Helemaal mee eens'| BI1a_UTAUT == 'Mee eens'| BI1a_UTAUT == 'Een beetje mee eens') & Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')) /nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')))*100, digits = 1)`% aan van plan te zijn om de CoronaMelder te gebruiken in de komende twee maanden (zie figuur \@ref(fig:intentiontousenonusers)). Ongeveer een kwart geeft aan hier neutraal in te staan (`r round((nrow(filter(data, (BI1a_UTAUT == 'Neutraal') & Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')) /nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')))*100, digits = 1)`%). Bijna 6 op de 10 respondenten (`r round((nrow(filter(data, (BI1a_UTAUT == 'Helemaal mee oneens'| BI1a_UTAUT == 'Oneens'| BI1a_UTAUT == 'Een beetje oneens') & Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')) /nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')))*100, digits = 1)`%) geeft aan niet van plan te zijn de CoronaMelder te gaan gebruiken.  
 
