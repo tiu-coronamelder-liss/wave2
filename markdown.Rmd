@@ -2036,12 +2036,16 @@ data_currentwave_wavemin1$BI1a_UTAUT_agree_cw[(data_currentwave_wavemin1$BI1a_UT
 data_currentwave_wavemin1$BI1a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Mee eens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
 data_currentwave_wavemin1$BI1a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Neutraal'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Oneens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
 
-# Select the data: Only compare the current users and never users
-data_selected = data[data$nomem_encr %in% data_currentvsneveruser$nomem_encr, ]
-data_selected$user_status = droplevels(data_selected$user_status)
+# 
+data_selected_cw = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_cw == "Ik heb de CoronaMelder app nooit gebruikt", ]
+table(data_selected_cw$BI1a_UTAUT_agree_cw)
+
+data_selected_wmin1 = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_wmin1 == "Ik heb de CoronaMelder app nooit gebruikt", ]
+table(data_selected_wmin1$BI1a_UTAUT_agree_wmin1)
+
+chisq.table = rbind(table(data_selected_cw$BI1a_UTAUT_agree_cw), table(data_selected_wmin1$BI1a_UTAUT_agree_wmin1))
 
 # Convert into a table that can be used for the chi square test
-chisq.table = table(data_currentwave_wavemin1$BI1a_UTAUT_agree_cw, data_currentwave_wavemin1$BI1a_UTAUT_agree_wmin1)
 chisqtest = chisq.test(chisq.table) 
 ```
 
