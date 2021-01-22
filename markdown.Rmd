@@ -9,7 +9,7 @@ output:
     reference_docx: markdown_template.docx
 toc-title: "Inhoudsopgave"    
 ---
-```{r setup, include=FALSE}
+```{r setup, include=FALSE knitr::opts_chunk$set(warning=TRUE)}
 rm(list = ls()) #Clear workspace
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -368,7 +368,7 @@ plot
 #### Corona risicoperceptie en ernst
 Uit gedragswetenschappelijke literatuur is bekend dat gepercipieerde ernst en vatbaarheid voor een ziekte een rol kan spelen in de acceptatie van gezondheidsadviezen om de ontwikkeling van deze ziekte te voorkomen. Ongeveer de helft van de steekproef acht zichzelf vatbaar voor het coronavirus: `r round((nrow(filter(data, (HBM_PSus_self1 == 'Helemaal mee eens'| HBM_PSus_self1 == 'Mee eens'| HBM_PSus_self1 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% gaf aan het eens te zijn met de stelling dat men risico loopt op een besmetting in de komende twee maanden (zie figuur \@ref(fig:riskperception)). Daarnaast was een vergelijkbaar percentage (`r round((nrow(filter(data, (HBM_PSus_other2 == 'Helemaal mee eens'| HBM_PSus_other2 == 'Mee eens'| HBM_PSus_other2 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%) het in meer of mindere mate eens met de stelling dat de kans groot is om een ander te besmetten indien men zelf besmet raakt.
 
-Voor het meten van de gepercipieerde ernst is gevraagd hoe erg respondenten het zouden vinden om zelf besmet te raken of om andere te besmetten. Een groot deel van de respondenten vind het erg om zelf besmet te raken (`r round((nrow(filter(data, (HBM_PSev_self1 == 'Helemaal mee eens'| HBM_PSev_self1 == 'Mee eens'| HBM_PSev_self1 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%). Daarnaast vindt men het erg om anderen te besmetten (`r round((nrow(filter(data, (HBM_PSev_other2 == 'Helemaal mee eens'| HBM_PSev_other2 == 'Mee eens'| HBM_PSev_other2 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%). 
+Voor het meten van de gepercipieerde ernst is gevraagd hoe erg respondenten het zouden vinden om zelf besmet te raken of om anderen te besmetten. Een groot deel van de respondenten vind het erg om zelf besmet te raken (`r round((nrow(filter(data, (HBM_PSev_self1 == 'Helemaal mee eens'| HBM_PSev_self1 == 'Mee eens'| HBM_PSev_self1 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%). Daarnaast vindt men het erg om anderen te besmetten (`r round((nrow(filter(data, (HBM_PSev_other2 == 'Helemaal mee eens'| HBM_PSev_other2 == 'Mee eens'| HBM_PSev_other2 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%). 
 
 ```{r riskperception, echo=FALSE, fig.width=7, fig.height=2.2, fig.cap="Waargenomen ernst en vatbaarheid - hele populatie", tab.cap="Waargenomen ernst en vatbaarheid - hele populatie"}
 
@@ -551,7 +551,7 @@ mcnemartest = mcnemar.test(mcnemar.table)
 ```
 De McNemar toets (X²(`r mcnemartest$parameter`) = `r round(mcnemartest$statistic, digits = 2)`, p `r ifelse(mcnemartest$p.value < 0.001, "<0.001", paste("=", round(mcnemartest$p.value, digits = 3)))`) liet zien dat er `r if(mcnemartest$p.value > 0.05){"g"}`een significant verschil was tussen de huidige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSev_other2_agree_cw == 'Totaal eens_cw'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) en de vorige meting (`r round((nrow(filter(data_currentwave_wavemin1, (HBM_PSev_other2_agree_wmin1 == 'Totaal eens_wmin1'))) /nrow(filter(data_currentwave_wavemin1)))*100, digits = 1)`%) in het percentage dat aangaf het eens te zijn met de stelling dat het erg is om anderen te besmetten met het coronavirus.
 
-```{r, echo=FALSE, fig.width=5.5, fig.height=4, dpi = 300, fig.cap="Waargenomen ernst en vatbaarheid over de tijd, totaal percentage dat minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
+```{r, echo=FALSE, fig.width=5.5, fig.height=4, dpi = 300, fig.cap="Waargenomen ernst en vatbaarheid over de tijd, totaal percentage dat het minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("HBM_PSus_self1", 
