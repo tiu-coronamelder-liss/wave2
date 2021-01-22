@@ -9,13 +9,13 @@ output:
     reference_docx: markdown_template.docx
 toc-title: "Inhoudsopgave"    
 ---
-```{r setup, include=FALSE knitr::opts_chunk$set(warning=TRUE)}
+```{r setup, include=FALSE}
 rm(list = ls()) #Clear workspace
 knitr::opts_chunk$set(echo = TRUE)
 
 # Disable output of warnings to the generated doc file
 # Set to FALSE for final doc, TRUE for debugging
-knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(warning = TRUE)
 
 ##### Load packages
 # For importing SPSS files
@@ -953,7 +953,7 @@ ggdraw(aligned[[2]])
 
 ```
 
-```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Naleving algemene gedragsregels bij klachten, totaal percentage dat vaak, meestal, of altijd naar buiten is geweest met klachten."}
+```{r, echo=FALSE, fig.width=5.5, fig.height=2.5, dpi = 300, fig.cap="Naleving quarantaine maatregel bij klachten over de tijd, totaal percentage dat vaak, meestal, of altijd naar buiten is geweest met klachten."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("Behavior_AdherenceGeneralMeasures_quarantaine")
