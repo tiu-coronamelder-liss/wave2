@@ -1455,7 +1455,7 @@ ggdraw(aligned[[2]])
 ```
 
 #### Vertrouwen in aanpak van de overheid
-Respondenten zijn verdeeld wat betreft vertrouwen in de overheid met betrekking tot de aanpak van de coronacrisis (zie figuur \@ref(fig:trustgovernment)). Ongeveeer de helft is het eens met de stelling stelling 'Ik heb vertrouwen in de manier waarop de Nederlandse overheid probeert het coronavirus onder controle te houden' (`r # TODO: Nieuwe berekening op basis van 7 variabelen toevoegen `%).
+Respondenten zijn verdeeld wat betreft vertrouwen in de overheid met betrekking tot de aanpak van de coronacrisis (zie figuur \@ref(fig:trustgovernment)).
 
 ```{r trustgovernment, echo=FALSE, fig.width=7, fig.height=3, fig.cap="Vertrouwen in de Nederlandse overheid", tab.cap="Vertrouwen in de Nederlandse overheid. Als het gaat om de bestrijding van corona, dan..."}
 
