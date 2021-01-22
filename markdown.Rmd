@@ -3292,7 +3292,7 @@ rm(data_nona1b)
 ### Verwachte effectiviteit CoronaMelder in bestrijding coronavirus
 In kaart is gebracht in welke mate men denkt dat de CoronaMelder bijdraagt aan de bestrijding van het coronavirus. In totaal gaf `r round((nrow(filter(data, (PE1_UTAUT == 'Helemaal mee eens'| PE1_UTAUT == 'Mee eens'| PE1_UTAUT == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% aan het eens te zijn met de stelling dat men door het gebruiken van de CoronaMelder bijdraagt aan de bestrijding van het coronavirus. Daarnaast gaf `r round((nrow(filter(data, (PE2_UTAUT == 'Helemaal mee eens'| PE2_UTAUT == 'Mee eens'| PE2_UTAUT == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% aan dat de CoronaMelder nuttig is om ervoor te zorgen dat het coronavirus zich minder verspreidt en geeft `r round((nrow(filter(data, (Beliefs_Protectriskgroups == 'Helemaal mee eens'| Beliefs_Protectriskgroups == 'Mee eens'| Beliefs_Protectriskgroups == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% aan dat de CoronaMelder helpt om mensen met een kwetsbare gezondheid te beschermen. 
 
-```{r, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Verwachte effeciviteit CoronaMelder", tab.cap="Verwachte effeciviteit CoronaMelder"}
+```{r, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Verwachte effectiviteit CoronaMelder", tab.cap="Verwachte effectiviteit CoronaMelder"}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("PE1_UTAUT", 
@@ -3849,7 +3849,7 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
-Daarnaast is aan de respondenten (`r nrow(filter(data, (Media == 'Vaak'| Media == 'Soms'| Media == 'Af en toe')))`) die de in voorgaande vraag aangaven de CoronaMelder af en toe, soms of vaak voorbij te hebben zien gekomen in de media en/of nieuws ook gevraagd naar de toon van de berichtgeving over de CoronaMelder. Hierbij gaf `r round((nrow(filter(data, (MediaValence == 'Heel erg positief'| MediaValence == 'Positief'| MediaValence == 'Een beetje positief'))) /nrow(filter(data, (Media == 'Vaak'| Media == 'Soms'| Media == 'Af en toe'))))*100, digits = 1)`% aan dat deze berichten in de media over het algemeen positief van toon waren.
+Daarnaast is aan de respondenten (`r nrow(filter(data, (Media == 'Vaak'| Media == 'Soms'| Media == 'Af en toe')))`) die de in voorgaande vraag aangaven de CoronaMelder af en toe, soms of vaak voorbij te hebben zien gekomen in de media en/of nieuws ook gevraagd naar de toon van de berichtgeving over de CoronaMelder. Hierbij gaf `r round((nrow(filter(data, (MediaValence == 'Heel erg positief'| MediaValence == 'Positief'| MediaValence == 'Een beetje positief'))) /nrow(filter(data, (Media == 'Vaak'| Media == 'Soms'| Media == 'Af en toe'))))*100, digits = 1)`% aan dat deze berichten in de media over het algemeen positief van toon waren. In totaal `r round((nrow(filter(data, (MediaValence == 'Heel erg negatief'| MediaValence == 'Negatief'| MediaValence == 'Een beetje negatief'))) /nrow(filter(data, (Media == 'Vaak'| Media == 'Soms'| Media == 'Af en toe'))))*100, digits = 1)`% gaf aan dat de berichten negatief van toon waren. 
 
 ```{r, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Toon van mediaberichten over de CoronaMelder", tab.cap="Toon van mediaberichten over de CoronaMelder"}
 
@@ -3998,6 +3998,7 @@ data$MediaValence_agree[(data$MediaValence == 'Heel erg positief'| data$MediaVal
 data$MediaValence_agree[(data$MediaValence == 'Neutraal'| data$MediaValence == 'Een beetje negatief'| data$MediaValence == 'Negatief'| data$MediaValence == 'Heel erg negatief'| data$MediaValence == 'Weet ik niet')] <- "Neutraal, negatief, weet niet" 
 # Select the data: Only compare the current users and never users
 data_selected = data[data$nomem_encr %in% data_currentvsneveruser$nomem_encr, ]
+data_selected = data_selected[(data_selected$Media == 'Vaak'| data_selected$Media == 'Soms'| data_selected$Media == 'Af en toe'),]
 data_selected$user_status = droplevels(data_selected$user_status)
 
 # Convert into a table that can be used for the chi square test
@@ -4011,6 +4012,7 @@ data$MediaValence_agree[(data$MediaValence == 'Heel erg positief'| data$MediaVal
 data$MediaValence_agree[(data$MediaValence == 'Neutraal'| data$MediaValence == 'Een beetje negatief'| data$MediaValence == 'Negatief'| data$MediaValence == 'Heel erg negatief'| data$MediaValence == 'Weet ik niet')] <- "Neutraal, negatief, weet niet" 
 # Select the data: Only compare the current users and never users
 data_selected = data[data$nomem_encr %in% data_currentvsneveruserneutral$nomem_encr, ]
+data_selected = data_selected[(data_selected$Media == 'Vaak'| data_selected$Media == 'Soms'| data_selected$Media == 'Af en toe'),]
 data_selected$user_status_intention = droplevels(data_selected$user_status_intention)
 
 # Convert into a table that can be used for the chi square test
@@ -4519,7 +4521,7 @@ ggdraw(aligned[[2]])
 ```
 
 ### Maatschappelijke gevolgen gebruik CoronaMelder
-Aan de respondenten werd gevraagd in hoeverre zij dachten dat gebruik van de CoronaMelder de Nederlandse economie helpt. Ongeveer één op de drie respondenten heeft de overtuiging dat de CoronaMelder de Nederlandse economie zal helpen (`r round((nrow(filter(data, (Beliefs_benefiteconomic == 'Helemaal mee eens'| Beliefs_benefiteconomic == 'Mee eens'| Beliefs_benefiteconomic == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%).
+Aan de respondenten werd gevraagd in hoeverre zij dachten dat gebruik van de CoronaMelder de Nederlandse economie helpt. Meer dan een kwart van de respondenten heeft de overtuiging dat de CoronaMelder de Nederlandse economie zal helpen (`r round((nrow(filter(data, (Beliefs_benefiteconomic == 'Helemaal mee eens'| Beliefs_benefiteconomic == 'Mee eens'| Beliefs_benefiteconomic == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`%).
 
 ```{r beneficteconomic, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Overtuiging dat de CoronaMelder de Nederlandse economie helpt", tab.cap="Geloof dat de CoronaMelder de Nederlandse economie helpt"}
 
@@ -5961,7 +5963,7 @@ ggdraw(aligned[[2]])
 ```
 
 ### Verplichting tot gebruik
-Er is ook gekeken naar de mate waarin iemand een verplichting voelt om de techniek te gebruiken, en hoe mensen reageren als zij het gevoel hebben dat er wordt aangedrongen op het gebruiken van de CoronaMelder. Slechts `r round((nrow(filter(data, (Beliefs_voluntariness == 'Helemaal mee eens'| Beliefs_voluntariness == 'Mee eens'| Beliefs_voluntariness == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% voelt zicht verplicht tot het gebruik, en `r round((nrow(filter(data, (Beliefs_voluntariness2 == 'Helemaal mee eens'| Beliefs_voluntariness2 == 'Mee eens'| Beliefs_voluntariness2 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% voelt zich niet vrij om zelf te kiezen of hij/zij de CoronaMelder gebruikt. Daarnaast gaf `r round((nrow(filter(data, (Beliefs_AffectIrritation == 'Helemaal mee eens'| Beliefs_AffectIrritation == 'Mee eens'| Beliefs_AffectIrritation == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% aan zich te irriteren aan het aandringen op het gebruik van de CoronaMelder, en Slechts `r round((nrow(filter(data, (Beliefs_AffectAnger == 'Helemaal mee eens'| Beliefs_AffectAnger == 'Mee eens'| Beliefs_AffectAnger == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% is hier boos over.
+Er is ook gekeken naar de mate waarin iemand een verplichting voelt om de techniek te gebruiken, en hoe mensen reageren als zij het gevoel hebben dat er wordt aangedrongen op het gebruiken van de CoronaMelder. In totaal `r round((nrow(filter(data, (Beliefs_voluntariness == 'Helemaal mee eens'| Beliefs_voluntariness == 'Mee eens'| Beliefs_voluntariness == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% voelt zich verplicht tot het gebruik, en `r round((nrow(filter(data, (Beliefs_voluntariness2 == 'Helemaal mee eens'| Beliefs_voluntariness2 == 'Mee eens'| Beliefs_voluntariness2 == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% voelt zich niet vrij om zelf te kiezen of hij/zij de CoronaMelder gebruikt. Daarnaast gaf `r round((nrow(filter(data, (Beliefs_AffectIrritation == 'Helemaal mee eens'| Beliefs_AffectIrritation == 'Mee eens'| Beliefs_AffectIrritation == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% aan zich te irriteren aan het aandringen op het gebruik van de CoronaMelder en `r round((nrow(filter(data, (Beliefs_AffectAnger == 'Helemaal mee eens'| Beliefs_AffectAnger == 'Mee eens'| Beliefs_AffectAnger == 'Een beetje mee eens'))) /nrow(data))*100, digits = 1)`% is hier boos over.
 
 ```{r Voluntariness, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Verplichting tot gebruik", tab.cap="Verplichting tot gebruik", tab.cap="Verplichting tot gebruik", tab.cap="Verplichting tot gebruik"}
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart

@@ -115,9 +115,17 @@ CROSSTABS
   /CELLS=COUNT ROW COLUMN 
   /COUNT ROUND CELL.
 
-* Check user status general statements conspiracy trust. 
+* Check user status general statements conspiracy.
 CROSSTABS
-  /TABLES= Beliefs_Conspiracy2 Beliefs_TrustGovernment BY Behavior_UTAUT
+  /TABLES= Beliefs_Conspiracy2 BY Behavior_UTAUT
+  /FORMAT=AVALUE TABLES
+  /STATISTICS=CHISQ 
+  /CELLS=COUNT ROW COLUMN 
+  /COUNT ROUND CELL.
+
+* Check trust government. 
+CROSSTABS
+  /TABLES= Trust_Gov_1 Trust_Gov_6  BY Behavior_UTAUT
   /FORMAT=AVALUE TABLES
   /STATISTICS=CHISQ 
   /CELLS=COUNT ROW COLUMN 
@@ -132,7 +140,7 @@ FORMATS filter_$ (f1.0).
 FILTER BY filter_$.
 EXECUTE.
 CROSSTABS
-  /TABLES= Beliefs_Conspiracy2 Beliefs_TrustGovernment BY user_status_intention 
+  /TABLES= Beliefs_Conspiracy2 BY user_status_intention 
   /FORMAT=AVALUE TABLES
   /STATISTICS=CHISQ 
   /CELLS=COUNT ROW COLUMN 
@@ -167,6 +175,23 @@ CROSSTABS
 
 CROSSTABS
   /TABLES= PE1_UTAUT BY user_status_intention 
+  /FORMAT=AVALUE TABLES
+  /STATISTICS=CHISQ 
+  /CELLS=COUNT ROW COLUMN 
+  /COUNT ROUND CELL.
+
+* In the Media.
+FREQUENCIES VARIABLES= Media MediaValence
+ /ORDER=ANALYSIS.
+CROSSTABS
+  /TABLES= Media MediaValence BY Behavior_UTAUT
+  /FORMAT=AVALUE TABLES
+  /STATISTICS=CHISQ 
+  /CELLS=COUNT ROW COLUMN 
+  /COUNT ROUND CELL.
+
+CROSSTABS
+  /TABLES= Media MediaValence BY user_status_intention 
   /FORMAT=AVALUE TABLES
   /STATISTICS=CHISQ 
   /CELLS=COUNT ROW COLUMN 
@@ -235,36 +260,36 @@ VALUE LABELS filter_$ 0 'Not Selected' 1 'Selected'.
 FORMATS filter_$ (f1.0).
 FILTER BY filter_$.
 EXECUTE.
-FREQUENCIES VARIABLES=  FC1_UTAUT FC2_UTAUT DS_Mobile1 DS_Mobile2 HBM_barriers_CoronaMelder
+FREQUENCIES VARIABLES=  FC1_UTAUT FC2_UTAUT HBM_barriers_CoronaMelder
  /ORDER=ANALYSIS.
 
 CROSSTABS
-  /TABLES= FC1_UTAUT FC2_UTAUT DS_Mobile1 DS_Mobile2 HBM_barriers_CoronaMelder BY Behavior_UTAUT
+  /TABLES= FC1_UTAUT FC2_UTAUT HBM_barriers_CoronaMelder BY Behavior_UTAUT
   /FORMAT=AVALUE TABLES
   /STATISTICS=CHISQ 
   /CELLS=COUNT ROW COLUMN 
   /COUNT ROUND CELL.
 
 CROSSTABS
-  /TABLES= FC1_UTAUT FC2_UTAUT DS_Mobile1 DS_Mobile2 HBM_barriers_CoronaMelder BY user_status_intention 
+  /TABLES= FC1_UTAUT FC2_UTAUT HBM_barriers_CoronaMelder BY user_status_intention 
   /FORMAT=AVALUE TABLES
   /STATISTICS=CHISQ 
   /CELLS=COUNT ROW COLUMN 
   /COUNT ROUND CELL.
 
 * Voluntariness. 
-FREQUENCIES VARIABLES=  Beliefs_voluntariness
+FREQUENCIES VARIABLES=  Beliefs_voluntariness Beliefs_voluntariness2 Beliefs_AffectIrritation Beliefs_AffectAnger
  /ORDER=ANALYSIS.
 
 CROSSTABS
-  /TABLES= Beliefs_voluntariness BY Behavior_UTAUT
+  /TABLES= Beliefs_voluntariness  Beliefs_voluntariness2 Beliefs_AffectIrritation Beliefs_AffectAnger BY Behavior_UTAUT
   /FORMAT=AVALUE TABLES
   /STATISTICS=CHISQ 
   /CELLS=COUNT ROW COLUMN 
   /COUNT ROUND CELL.
 
 CROSSTABS
-  /TABLES= Beliefs_voluntariness BY user_status_intention 
+  /TABLES= Beliefs_voluntariness  Beliefs_voluntariness2 Beliefs_AffectIrritation Beliefs_AffectAnger BY user_status_intention 
   /FORMAT=AVALUE TABLES
   /STATISTICS=CHISQ 
   /CELLS=COUNT ROW COLUMN 
