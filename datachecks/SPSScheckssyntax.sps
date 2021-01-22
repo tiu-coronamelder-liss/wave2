@@ -51,9 +51,14 @@ FREQUENCIES VARIABLES= HBM_PSus_self1 HBM_PSev_other2
 FREQUENCIES VARIABLES= Intention_AdherenceGeneralMeasures_quarantaine Behavior_AdherenceGeneralMeasures_handwashing Corona_complaints Behavior_AdherenceGeneralMeasures_quarantaine
  /ORDER=ANALYSIS.
 
-* Conspiracy theories and trust government.
-FREQUENCIES VARIABLES= Beliefs_Conspiracy2 Beliefs_TrustGovernment
+* Conspiracy theories.
+FREQUENCIES VARIABLES= Beliefs_Conspiracy1 Beliefs_Conspiracy2 
  /ORDER=ANALYSIS.
+
+* Trust government. 
+FREQUENCIES VARIABLES= Trust_Gov_1 Trust_Gov_6  
+ /ORDER=ANALYSIS.
+
 
 * Awareness.
 FREQUENCIES VARIABLES= Awareness
