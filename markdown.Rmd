@@ -2194,13 +2194,11 @@ Om inzicht te krijgen in welke factoren (demografisch, persoonlijk, sociaal, omg
 
 Om dit te onderzoeken wordt voor elke demografische variabele een chi kwadraat toets uitgevoerd. In het geval dat deze toets aangeeft dat de demografische variabele en de gebruikersstatus afhankelijk zijn - oftewel dat een of meerdere van de subgroepen afwijken van het gemiddelde percentage gebruikers - worden er posthoc paarsgewijze chi kwadraattests met FDR-correctie uitgevoerd om te bepalen welke groepen significant van elkaar verschillen in percentage gebruikers. In de onderstaande tabel kunnen de resultaten gevonden worden. In de appendix kunnen alle paarsgewijze vergelijkingen gevonden worden voor variabelen die samen hingen met de gebruikersstatus. 
 
-Demografische variabelen die niet samenhingen met gebruik waren geslacht, de stedelijkheid van de woonplaats, de dagelijkse bezigheid (bv. loondienst, pensioen), de woonvorm van het huishouden (bv. alleen wonend of met kinderen) en de frequentie waarmee iemand op minder dan 1.5 meter van ouderen en mensen met een kwetsbare gezondheid komt vanwege werk of (privé) zorgtaken. 
+Demografische variabelen die niet samenhingen met gebruik waren geslacht, leeftijd, de stedelijkheid van de woonplaats, de dagelijkse bezigheid (bv. loondienst, pensioen), de woonvorm van het huishouden (bv. alleen wonend of met kinderen) en de frequentie waarmee iemand op minder dan 1.5 meter van ouderen en mensen met een kwetsbare gezondheid komt vanwege werk of (privé) zorgtaken. 
 
-Voor de volgende demografische kenmerken was er wel een afhankelijkheid: Het percentages gebruikers was niet gelijk verdeeld over alle leeftijdscategorieën. Het percentage gebruikers was significant lager bij de 15 - 24 jarigen vergeleken met de 55 - 64 jarigen. 
+Voor de volgende demografische kenmerken was er wel een afhankelijkheid: Het percentages gebruikers was niet gelijk verdeeld over de verschillende opleidingsniveaus. Bij de hoger opgeleiden (wo) was het percentage gebruikers het hoogst. Bij mensen die aleen basisonderwijs of vmbo hebben gevolgd was dit percentage het laagst. Ook netto maandkomen hing samen met gebruik mensen die maandelijks meer dan 3501 eur netto verdienen gebruiken de CoronaMelder het vaakst. 
 
-Nog een demografische variabele die samenhing met gebruik was opleidingsniveau. Bij de hoger opgeleiden (hbo en wo) was het percentage gebruikers het hoogst. Bij mensen die aleen basisonderwijs of vmbo hebben gevolgd was dit percentage het laagst. Ook netto maandkomen hing samen met gebruik mensen die maandelijks meer dan 3501 eur netto verdienen gebruiken de CoronaMelder het vaakst terwijl dit percentage bij mensen met een lager inkomen een stuk lager is. 
-
-Ook burgerlijke staat hing samen met gebruik van de CoronaMelder. Zo wordt de CoronaMelder minder vaak gebruikt door weduwen en weduwnaars en het vaakst door gehuwden. 
+Ook burgerlijke staat hing samen met gebruik van de CoronaMelder. Zo wordt de CoronaMelder minder vaak gebruikt door weduwen en weduwnaars en het vaakst door gehuwden.   
 
 
 ```{r demobyuserstatus, echo=FALSE, results="asis", tab.cap = "Demografische kenmerken naar gebruikersstatus"} 
@@ -2532,7 +2530,7 @@ data_selected$user_status = droplevels(data_selected$user_status)
 chisq.table = table(data_selected$Intention_AdherenceGeneralMeasures_handwashing_agree, data_selected$user_status)
 chisqtest = chisq.test(chisq.table) 
 ```
-De chi kwadraat toets (X²(`r chisqtest$parameter`) = `r round(chisqtest$statistic, digits = 2)`, p `r ifelse(chisqtest$p.value < 0.001, "<0.001", paste("=", round(chisqtest$p.value, digits = 3)))`) liet zien dat er `r if(chisqtest$p.value > 0.05){"g"}`een significant verschil was in het percentage gebruikers (`r round((nrow(filter(data_selected, (user_status == 'Gebruiker'& Intention_AdherenceGeneralMeasures_handwashing_agree == 'Totaal eens'))) /nrow(filter(data_selected, (user_status == 'Gebruiker'))))*100, digits = 1)`%) dat aangaf de handen regelmatig te wassen vergeleken met degenen die de app nooit hebben gebruikt (`r round((nrow(filter(data_selected, (user_status == 'Niet gebruiker' & Intention_AdherenceGeneralMeasures_handwashing_agree == 'Totaal eens'))) /nrow(filter(data_selected, (user_status == 'Niet gebruiker'))))*100, digits = 1)`%).  
+De chi kwadraat toets (X²(`r chisqtest$parameter`) = `r round(chisqtest$statistic, digits = 2)`, p `r ifelse(chisqtest$p.value < 0.001, "<0.001", paste("=", round(chisqtest$p.value, digits = 3)))`) liet zien dat er `r if(chisqtest$p.value > 0.05){"g"}`een significant verschil was in het percentage gebruikers (`r round((nrow(filter(data_selected, (user_status == 'Gebruiker'& Intention_AdherenceGeneralMeasures_handwashing_agree == 'Totaal eens'))) /nrow(filter(data_selected, (user_status == 'Gebruiker'))))*100, digits = 1)`%) dat aangaf de intentie te hebben om handen regelmatig te wassen vergeleken met degenen die de app nooit hebben gebruikt (`r round((nrow(filter(data_selected, (user_status == 'Niet gebruiker' & Intention_AdherenceGeneralMeasures_handwashing_agree == 'Totaal eens'))) /nrow(filter(data_selected, (user_status == 'Niet gebruiker'))))*100, digits = 1)`%).  
 
 ```{r chibehaviorhandwashingusernonuser, echo=FALSE}
 # First calculate a proportion for the variable. 
@@ -9905,17 +9903,7 @@ Zhang, B., Kreps, S., & McMurry, N. (2020). Americans’ perceptions of privacy 
 ## Additionele resultaten: Demografie naar gebruikersstatus - Paarsgewijze vergelijkingen
 Vergelijking subgroepen met ruwe p-waarden en FDR-gecorrigeerde p-waarden. 
 ```{r , echo=FALSE}
-### Determine all pairwise comparisons for the demgraphic variables the chi square indicated that the variable was not indepnedent from use status. 
-# Age category (lftdcat)
-data_selected = data_currentvsneveruser
-data_selected$lftdcat = droplevels(data_selected$lftdcat)
-chisq.table = table(data_selected$lftdcat, data_selected$user_status)
-Matriz = chisq.table
-pairwiseNominalIndependence(Matriz,
-                            fisher = FALSE,
-                            gtest  = FALSE,
-                            chisq  = TRUE,
-                            method = "fdr")
+### Determine all pairwise comparisons for the demgraphic variables the chi square indicated that the variable was not independent from user status. 
 # Educational level (oplmet_simplified)
 data_selected = data_currentvsneveruser
 data_selected$oplmet_simplified = droplevels(data_selected$oplmet_simplified)
