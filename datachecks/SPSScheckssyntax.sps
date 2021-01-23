@@ -332,18 +332,18 @@ CROSSTABS
   /COUNT ROUND CELL.
 
 * Privacy and data safety. 
-FREQUENCIES VARIABLES=  Beliefs_datasafety Beliefs_locationmonitoring Beliefs_identitymonitoring 
+FREQUENCIES VARIABLES=  Beliefs_datasafety Beliefs_locationmonitoring Beliefs_identitymonitoring Beliefs_surveillancestate1 Beliefs_surveillancestate2
  /ORDER=ANALYSIS.
 
 CROSSTABS
-  /TABLES= Beliefs_datasafety Beliefs_locationmonitoring Beliefs_identitymonitoring BY Behavior_UTAUT
+  /TABLES= Beliefs_datasafety Beliefs_locationmonitoring Beliefs_identitymonitoring Beliefs_surveillancestate1 Beliefs_surveillancestate2 BY Behavior_UTAUT
   /FORMAT=AVALUE TABLES
   /STATISTICS=CHISQ 
   /CELLS=COUNT ROW COLUMN 
   /COUNT ROUND CELL.
 
 CROSSTABS
-  /TABLES= Beliefs_datasafety Beliefs_locationmonitoring Beliefs_identitymonitoring BY user_status_intention 
+  /TABLES= Beliefs_datasafety Beliefs_locationmonitoring Beliefs_identitymonitoring Beliefs_surveillancestate1 Beliefs_surveillancestate2 BY user_status_intention 
   /FORMAT=AVALUE TABLES
   /STATISTICS=CHISQ 
   /CELLS=COUNT ROW COLUMN 
@@ -379,6 +379,10 @@ FORMATS filter_$ (f1.0).
 FILTER BY filter_$.
 EXECUTE.
 FREQUENCIES VARIABLES=  HBM_selfefficacy_Test HBM_selfefficacy_Quarantaine HBM_perceivedbenefits_Test HBM_barriers_GP
+ /ORDER=ANALYSIS.
+
+* Feeling pressured to adhere to advices. 
+FREQUENCIES VARIABLES=  AdherenceNotification_voluntariness1 AdherenceNotification_voluntariness2 AdherenceNotification_AffectAnger AdherenceNotification_AffectIrritation
  /ORDER=ANALYSIS.
 
 * Intention to share GGD keys.
