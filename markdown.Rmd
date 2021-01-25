@@ -2070,9 +2070,9 @@ data_currentwave_wavemin1$BI1a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$BI1a
 data_currentwave_wavemin1$BI1a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Neutraal'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Oneens'| data_currentwave_wavemin1$BI1a_UTAUT_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
 
 # THe following explanation holds for BI1a and BI1b: The fact that for some of the participants the user status changed between wave 1 and wave 2, we decided to perform a chi square in which we compare the proportion of Totaal eens_wmin1 versus Neutraal, niet mee eens_wmin1 for users of wave 1 with the proportion of Totaal eens_cw versus Neutraal, niet mee eens_cw for users of the current wave. For this we have to select, separately for each wave, the users (or non users). For these subsets we calculate counts with Totaal eens and Neutraal, etc. After that we concatenate these counts int a 2x2 table and perform a regular chi square on that.  
-data_selected_cw = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_cw == "Ik gebruik de CoronaMelder app op dit moment", ]
+data_selected_cw = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_cw == "Ik heb de CoronaMelder app nooit gebruikt", ]
 
-data_selected_wmin1 = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_wmin1 == "Ik gebruik de CoronaMelder app op dit moment", ]
+data_selected_wmin1 = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_wmin1 == "Ik heb de CoronaMelder app nooit gebruikt", ]
 
 
 # Convert into a table that can be used for the chi square test
