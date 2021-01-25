@@ -5282,7 +5282,8 @@ ft_out <- width(ft_out, j = -1, width = (table_width-1.5)/(length(colnames(data_
 ft_out
 ```
 
-#### Verwachte gebruiksvriendelijkheid, inspanningsverwachting en zelfeffectiviteit over de tijd
+
+
 ```{r McNemarselfefficacyCMovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_agree_cw[(data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -8061,6 +8062,7 @@ ft_out
 ```
 
 ##### Intentie tot opvolgen adviezen gegeven in de melding over de tijd
+
 ```{r, echo=FALSE, fig.width=5.5, fig.height=4, dpi = 300, fig.cap="Intentie tot opvolgen adviezen zonder symptomen over de tijd, totaal percentage dat het minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
@@ -8503,7 +8505,6 @@ graph_questionlabels = c("Bellen om coronatest aan te vragen",
                          "Thuisblijven zo lang de melding adviseert", 
                          "Geen bezoek ontvangen", 
                          "De huisarts bellen"); 
-
 
 
 # Which values do we want to include in the table cells?
