@@ -353,7 +353,7 @@ chartdata <- data.frame(var=c("Ja, mijn partner",
 # Create the plot
 plot = ggplot(data=chartdata, aes(x=var, y=value)) +
   geom_bar(stat="identity", fill = "#bdd7e7", color = "#6baed6") +
-  geom_text(aes(x=var, y=value, ymax=value, label=value, 
+  geom_text(aes(x=var, y=value, label=value, 
                 hjust=ifelse(sign(value)>0, 1, 0)), 
             position = position_dodge(width=1)) +
   coord_flip() +
@@ -606,8 +606,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -962,8 +961,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -1016,8 +1014,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -1255,8 +1252,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -1464,8 +1460,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -1772,8 +1767,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -2134,8 +2128,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -2215,8 +2208,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -3803,8 +3795,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -4614,8 +4605,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -4920,8 +4910,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -5444,8 +5433,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -5796,8 +5784,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -6154,8 +6141,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -6561,8 +6547,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -6914,8 +6899,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -7423,8 +7407,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -7904,8 +7887,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -8272,8 +8254,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -8334,8 +8315,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -8641,8 +8621,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -8702,8 +8681,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank()) 
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -8939,8 +8917,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -9282,8 +9259,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -9401,8 +9377,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -9833,8 +9808,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
@@ -10038,8 +10012,7 @@ theplot <- ggplot(data_overtime, aes(x = wave, y = perc_positiveanswer, group = 
   scale_x_discrete(labels=wave_labels, expand=c(2.5,-1)) +
   theme(legend.position = "top", legend.direction = "vertical", legend.title = element_blank())
 
-aligned <- align_plots(baseplot, theplot, align="v")
-ggdraw(aligned[[2]])
+ggdraw(theplot)
 
 ```
 
