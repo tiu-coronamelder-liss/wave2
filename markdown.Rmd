@@ -994,7 +994,8 @@ for(wave_idx in 1:length(include_waves)) {
     data_overtime[idx,"variable"] = graph_questionlabels[variable_idx]
     data_overtime[idx,"wave"] = include_waves[wave_idx]
     
-    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars)) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_"))))))
+    data_overtime[idx,"perc_positiveanswer"] = nrow(filter(data_allwaves, (eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) %in% include_vars & (eval(parse(text=paste('Corona_complaints', include_waves[wave_idx], sep="_")))) == 'Ja')) / nrow(filter(data_allwaves, !is.na(eval(parse(text=paste(graph_variablenames[variable_idx], include_waves[wave_idx], sep="_")))) & (eval(parse(text=paste('Corona_complaints', include_waves[wave_idx], sep="_")))) == 'Ja'))    
+
   }
 }
 
