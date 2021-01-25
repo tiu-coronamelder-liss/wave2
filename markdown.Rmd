@@ -1701,9 +1701,6 @@ ft_out
 ```
 
 ### Bekendheid met CoronaMelder over de tijd
-graph_variablenames = c("Awareness")
-graph_questionlabels = c("Hoe bekend was u met de CoronaMelder?"); 
-
 ```{r chiawarenessovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$Awareness_agree_cw[(data_currentwave_wavemin1$Awareness_cw == 'Heel erg bekend'| data_currentwave_wavemin1$Awareness_cw == 'Bekend'| data_currentwave_wavemin1$Awareness_cw == 'Redelijk bekend'| data_currentwave_wavemin1$Awareness_cw == 'Een beetje bekend')] <- "Totaal bekend_cw"
