@@ -5257,6 +5257,56 @@ ft_out
 ```
 
 #### Verwachte gebruiksvriendelijkheid, inspanningsverwachting en zelfeffectiviteit over de tijd
+```{r ChisquareEE1aUtautovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$EE1a_UTAUT_agree_cw[(data_currentwave_wavemin1$EE1a_UTAUT_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$EE1a_UTAUT_cw == 'Mee eens'| data_currentwave_wavemin1$EE1a_UTAUT_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$EE1a_UTAUT_agree_cw[(data_currentwave_wavemin1$EE1a_UTAUT_cw == 'Neutraal'| data_currentwave_wavemin1$EE1a_UTAUT_cw == 'Een beetje oneens'| data_currentwave_wavemin1$EE1a_UTAUT_cw == 'Oneens'| data_currentwave_wavemin1$EE1a_UTAUT_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$EE1a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$EE1a_UTAUT_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$EE1a_UTAUT_wmin1 == 'Mee eens'| data_currentwave_wavemin1$EE1a_UTAUT_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$EE1a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$EE1a_UTAUT_wmin1 == 'Neutraal'| data_currentwave_wavemin1$EE1a_UTAUT_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$EE1a_UTAUT_wmin1 == 'Oneens'| data_currentwave_wavemin1$EE1a_UTAUT_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# THe following explanation holds for BI1a and BI1b: The fact that for some of the participants the user status changed between wave 1 and wave 2, we decided to perform a chi square in which we compare the proportion of Totaal eens_wmin1 versus Neutraal, niet mee eens_wmin1 for users of wave 1 with the proportion of Totaal eens_cw versus Neutraal, niet mee eens_cw for users of the current wave. For this we have to select, separately for each wave, the users (or non users). For these subsets we calculate counts with Totaal eens and Neutraal, etc. After that we concatenate these counts int a 2x2 table and perform a regular chi square on that.  
+data_selected_cw = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_cw == "Ik heb de CoronaMelder app nooit gebruikt", ]
+#table(data_selected_cw$EE1a_UTAUT_agree_cw)
+
+data_selected_wmin1 = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_wmin1 == "Ik heb de CoronaMelder app nooit gebruikt", ]
+#table(data_selected_wmin1$EE1a_UTAUT_agree_wmin1)
+
+# Convert into a table that can be used for the chi square test
+chisq.table = rbind(table(data_selected_cw$EE1a_UTAUT_agree_cw), table(data_selected_wmin1$EE1a_UTAUT_agree_wmin1))
+rownames(chisq.table) <- c('cw', 'wmin1')
+
+# Convert into a table that can be used for the chi square test
+chisqtest = chisq.test(chisq.table) 
+```
+Om te bepalen of de intentie tot (toekomstig) gebruik bij de niet gebruikers verschilt tussen de huidige en de vorige wave is een chi kwadraat uitgevoerd. Een complexiteit in deze analyse is dat sommige deelnemers in de vorige wave gebruikers waren en in de huidige niet (meer), of andersom. Om deze reden is in deze test een vergelijking gemaakt waarin de gebruikersstatus in beide waves is meegenomen. De chi kwadraat toets (X²(`r chisqtest$parameter`) = `r round(chisqtest$statistic, digits = 2)`, p `r ifelse(chisqtest$p.value < 0.001, "<0.001", paste("=", round(chisqtest$p.value, digits = 3)))`) liet zien dat er `r if(chisqtest$p.value > 0.05){"g"}`een significant verschil was in het percentage niet gebruikers in de huidige wave (`r round((nrow(filter(data_selected_cw, EE1a_UTAUT_agree_cw == 'Totaal eens_cw')) /nrow(data_selected_cw))*100, digits = 1)`%) dat aangaf het eens te zijn met de stelling dat het veel tijd en energie kost om de CoronaMelder te gebruiken, vergeleken met het percentage niet gebruikers uit de vorige wave dat in de vorige wave aangaf het hiermee eens te zijn (`r round((nrow(filter(data_selected_wmin1, EE1a_UTAUT_agree_wmin1 == 'Totaal eens_wmin1')) /nrow(data_selected_wmin1))*100, digits = 1)`%). 
+
+```{r ChisquareEE2aUtautovertime, echo=FALSE}
+# First calculate a proportion for the variable for the current wave. 
+data_currentwave_wavemin1$EE2a_UTAUT_agree_cw[(data_currentwave_wavemin1$EE2a_UTAUT_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$EE2a_UTAUT_cw == 'Mee eens'| data_currentwave_wavemin1$EE2a_UTAUT_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
+data_currentwave_wavemin1$EE2a_UTAUT_agree_cw[(data_currentwave_wavemin1$EE2a_UTAUT_cw == 'Neutraal'| data_currentwave_wavemin1$EE2a_UTAUT_cw == 'Een beetje oneens'| data_currentwave_wavemin1$EE2a_UTAUT_cw == 'Oneens'| data_currentwave_wavemin1$EE2a_UTAUT_cw == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_cw"
+
+# Calculate a proportion for the variable for the previous wave. 
+data_currentwave_wavemin1$EE2a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$EE2a_UTAUT_wmin1 == 'Helemaal mee eens'| data_currentwave_wavemin1$EE2a_UTAUT_wmin1 == 'Mee eens'| data_currentwave_wavemin1$EE2a_UTAUT_wmin1 == 'Een beetje mee eens')] <- "Totaal eens_wmin1"
+data_currentwave_wavemin1$EE2a_UTAUT_agree_wmin1[(data_currentwave_wavemin1$EE2a_UTAUT_wmin1 == 'Neutraal'| data_currentwave_wavemin1$EE2a_UTAUT_wmin1 == 'Een beetje oneens'| data_currentwave_wavemin1$EE2a_UTAUT_wmin1 == 'Oneens'| data_currentwave_wavemin1$EE2a_UTAUT_wmin1 == 'Helemaal mee oneens')] <- "Neutraal, niet mee eens_wmin1"
+
+# THe following explanation holds for BI1a and BI1b: The fact that for some of the participants the user status changed between wave 1 and wave 2, we decided to perform a chi square in which we compare the proportion of Totaal eens_wmin1 versus Neutraal, niet mee eens_wmin1 for users of wave 1 with the proportion of Totaal eens_cw versus Neutraal, niet mee eens_cw for users of the current wave. For this we have to select, separately for each wave, the users (or non users). For these subsets we calculate counts with Totaal eens and Neutraal, etc. After that we concatenate these counts int a 2x2 table and perform a regular chi square on that.  
+data_selected_cw = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_cw == "Ik heb de CoronaMelder app nooit gebruikt", ]
+#table(data_selected_cw$EE2a_UTAUT_agree_cw)
+
+data_selected_wmin1 = data_currentwave_wavemin1[data_currentwave_wavemin1$Behavior_UTAUT_wmin1 == "Ik heb de CoronaMelder app nooit gebruikt", ]
+#table(data_selected_wmin1$EE2a_UTAUT_agree_wmin1)
+
+# Convert into a table that can be used for the chi square test
+chisq.table = rbind(table(data_selected_cw$EE2a_UTAUT_agree_cw), table(data_selected_wmin1$EE2a_UTAUT_agree_wmin1))
+rownames(chisq.table) <- c('cw', 'wmin1')
+
+# Convert into a table that can be used for the chi square test
+chisqtest = chisq.test(chisq.table) 
+```
+Om te bepalen of de intentie tot (toekomstig) gebruik bij de niet gebruikers verschilt tussen de huidige en de vorige wave is een chi kwadraat uitgevoerd. Een complexiteit in deze analyse is dat sommige deelnemers in de vorige wave gebruikers waren en in de huidige niet (meer), of andersom. Om deze reden is in deze test een vergelijking gemaakt waarin de gebruikersstatus in beide waves is meegenomen. De chi kwadraat toets (X²(`r chisqtest$parameter`) = `r round(chisqtest$statistic, digits = 2)`, p `r ifelse(chisqtest$p.value < 0.001, "<0.001", paste("=", round(chisqtest$p.value, digits = 3)))`) liet zien dat er `r if(chisqtest$p.value > 0.05){"g"}`een significant verschil was in het percentage niet gebruikers in de huidige wave (`r round((nrow(filter(data_selected_cw, EE2a_UTAUT_agree_cw == 'Totaal eens_cw')) /nrow(data_selected_cw))*100, digits = 1)`%) dat aangaf het eens te zijn met de stelling dat men denkt dat de CoronaMelder makkelijk te gebruiken is, vergeleken met het percentage niet gebruikers uit de vorige wave dat in de vorige wave aangaf het hiermee eens te zijn (`r round((nrow(filter(data_selected_wmin1, EE2a_UTAUT_agree_wmin1 == 'Totaal eens_wmin1')) /nrow(data_selected_wmin1))*100, digits = 1)`%). 
+
 ```{r McNemarselfefficacyCMovertime, echo=FALSE}
 # First calculate a proportion for the variable for the current wave. 
 data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_agree_cw[(data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Helemaal mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Mee eens'| data_currentwave_wavemin1$HBM_selfefficacy_CoronaMelder_cw == 'Een beetje mee eens')] <- "Totaal eens_cw"
@@ -8035,6 +8085,8 @@ ft_out
 ```
 
 ##### Intentie tot opvolgen adviezen gegeven in de melding over de tijd
+
+
 ```{r, echo=FALSE, fig.width=5.5, fig.height=4, dpi = 300, fig.cap="Intentie tot opvolgen adviezen zonder symptomen over de tijd, totaal percentage dat het minstens een beetje eens was met de stellingen (een beetje mee eens, mee eens, helemaal mee eens)."}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
