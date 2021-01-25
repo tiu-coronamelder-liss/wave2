@@ -4201,10 +4201,35 @@ graph_questionlabels = c("Waren deze berichten/items over het algemeen negatief 
 # Which values do we want to include in the table cells?
 include_vars = c("Heel erg positief", "Positief", "Een beetje positief")
 
+# Note: for this table, the totals should include only people that have seen some messages about CoronaMelder
+# in the media, so we should filter those out (and not use the generic totals table created at the start
+# of this document).
+usergroup_names = c("users", "nonusers", "nonusers_no_intention", "nonusers_neutral", "nonusers_intention")
+
+usergroup_labels = c("Gebruikers", "Niet gebruikers", "Niet gebruikers - niet van plan om te gaan gebruiken", "Niet gebruikers - neutraal", "Niet gebruikers - wel van plan om te gaan gebruiken")
+
+user_totals_media <- data.frame(matrix(ncol = length(usergroup_names), nrow = 1))
+colnames(user_totals_media) <- usergroup_names
+
+# Current user
+user_totals_media[1] <- sum(data$user_status == "Gebruiker" & data$Media != "Nooit" & data$Media != "Weet ik niet")
+
+# Non user
+user_totals_media[2] <- sum(data$user_status == "Niet gebruiker" & data$Media != "Nooit" & data$Media != "Weet ik niet")
+
+# Non user -- not planning to use
+user_totals_media[3] <- sum(data$user_status_intention == "Nooit gebruikt en niet van plan" & data$Media != "Nooit" & data$Media != "Weet ik niet")
+
+# Non user -- neutral
+user_totals_media[4] <- sum(data$user_status_intention == "Nooit gebruikt en neutraal" & data$Media != "Nooit" & data$Media != "Weet ik niet")
+
+# Non user -- planning to use
+user_totals_media[5] <- sum(data$user_status_intention == "Nooit gebruikt en wel van plan" & data$Media != "Nooit" & data$Media != "Weet ik niet")
+
 # === NO MORE EDITS SHOULD BE NEEDED BELOW THIS POINT ===
 
 # Split by user groups
-data_grouptable = data.frame(matrix(ncol = length(colnames(user_totals))+1, nrow = length(graph_variablenames)))
+data_grouptable = data.frame(matrix(ncol = length(colnames(user_totals_media))+1, nrow = length(graph_variablenames)))
 
 colnames(data_grouptable) <- c("variable", usergroup_names)
 
@@ -4236,7 +4261,7 @@ colnames(tmp_labels) <- c("variable", usergroup_names)
 ft <- set_header_labels(ft, values = tmp_labels)
 
 # Set up the footer of totals
-totals = c("Totaal", user_totals)
+totals = c("Totaal", user_totals_media)
 totals[-1] <- paste(totals[-1], " (100.0%)")
 
 # Percentages and totals
@@ -4247,7 +4272,7 @@ for(colname in colnames(data_grouptable)) {
       ft <- compose(ft, j = colname, value = as_paragraph(eval(parse(text=colname)), " (0.0%)"))
     }
     else {
-      ft <- compose(ft, j = colname, value = as_paragraph(eval(parse(text=colname)), " (", sprintf("%.1f", eval(parse(text=colname))/user_totals[1,colname]*100), "%)"))
+      ft <- compose(ft, j = colname, value = as_paragraph(eval(parse(text=colname)), " (", sprintf("%.1f", eval(parse(text=colname))/user_totals_media[1,colname]*100), "%)"))
     }
     
   }
