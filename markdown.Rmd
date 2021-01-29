@@ -4928,7 +4928,7 @@ Daar staat tegenover dat van de mensen die de CoronaMelder al *wel* gebruiken, s
 
 Hetzelfde patroon was te zien voor de vraag over gebruiksgemak: het merendeel (`r round((nrow(filter(data, (EE2a_UTAUT == 'Helemaal mee eens'| EE2a_UTAUT == 'Mee eens'| EE2a_UTAUT == 'Een beetje mee eens') & Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment')) /nrow(filter(data, Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment')))*100, digits = 1)`%) van de respondenten die de CoronaMelder op dit moment gebruiken was het eens met de stelling dat de CoronaMelder makkelijk te gebruiken is. Van degenen die de CoronaMelder nooit hebben gebruikt gaf `r round((nrow(filter(data, (EE2b_UTAUT == 'Helemaal mee eens'| EE2b_UTAUT == 'Mee eens'| EE2b_UTAUT == 'Een beetje mee eens') & Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')) /nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt')))*100, digits = 1)`% aan dat hij/zij verwacht dat de CoronaMelder makkelijk te gebruiken is. 
 
-```{r effortexpectancynonusers, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Inspanningsverwachting en zelfeffectiviteit bij respondenten die de CoronaMelder op dit moment niet gebruiken", tab.cap="Inspanningsverwachting en zelfeffectiviteit bij respondenten die de CoronaMelder op dit moment niet gebruiken"}
+```{r effortexpectancynonusers, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Gebruiksvriendelijkheid en inspanningsverwachting bij respondenten die de CoronaMelder op dit moment niet gebruiken", tab.cap="Gebruiksvriendelijkheid en inspanningsverwachting bij respondenten die de CoronaMelder op dit moment niet gebruiken"}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("EE1b_UTAUT", 
@@ -5047,7 +5047,7 @@ ft_out
 
 In onderstaande grafiek en tabellen zijn de resultaten voor de respondenten die de CoronaMelder momenteel gebruiken, te vinden. 
 
-```{r effortexpectancyusers, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Zelfeffectiviteit bij respondenten die de CoronaMelder op dit moment gebruiken", tab.cap="Zelfeffectiviteit bij respondenten die de CoronaMelder op dit moment gebruiken"}
+```{r effortexpectancyusers, echo=FALSE, fig.width=7, fig.height=2, fig.cap="Gebruiksvriendelijkheid en inspanningsverwachting  bij respondenten die de CoronaMelder op dit moment gebruiken", tab.cap="Gebruiksvriendelijkheid en inspanningsverwachting bij respondenten die de CoronaMelder op dit moment gebruiken"}
 
 # Order in which you would like to have the items appear (first = top, last = bottom) in the horizontal bar chart
 graph_variablenames = c("EE1a_UTAUT", 
