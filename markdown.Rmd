@@ -1796,9 +1796,9 @@ ggdraw(theplot)
 ## Gebruik CoronaMelder
 Van alle respondenten gaf `r round(nrow(filter(data, Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik gebruik de CoronaMelder app op dit moment'))`) aan dat hij/zij de CoronaMelder op dit moment gebruikt en `r round(nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app nooit gebruikt'))`) geeft aan de CoronaMelder nooit te hebben gebruikt. Slechts `r round(nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app in het verleden wel gebruikt maar op dit moment niet meer'))/nrow(data)*100, digits = 1)`% (n = `r nrow(filter(data, Behavior_UTAUT == 'Ik heb de CoronaMelder app in het verleden wel gebruikt maar op dit moment niet meer'))`) gaf aan de CoronaMelder in het verleden gebruikt te hebben maar op dit moment niet meer. 
 
-### Open vraag: redenen om de CoronaMelder niet (meer) te gebruiken
 
 ```{r echo = FALSE, eval = FALSE}
+##### Open vraag: redenen om de CoronaMelder niet (meer) te gebruiken
 ## Clean up the text for analysis
 library(tm)
 # Select only those who used to use the CoronaMelder
